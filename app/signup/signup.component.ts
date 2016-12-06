@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {SignUpUser} from './SignUpUser';
+import {SignUpUser} from '../services/user/SignUpUser';
 
-declare var openpgp:any;
+import {UserService} from '../services/user/user.service';
 
 @Component({
   selector: 'signup',
@@ -22,6 +22,10 @@ declare var openpgp:any;
 <div *ngIf="busy">
 please wait...
 </div>
+
+<div *ngIf="error">
+{{error}}
+</div>
 `
 
 })
@@ -30,50 +34,31 @@ export class SignUpComponent {
   user:SignUpUser;
 
   busy:boolean;
+  error:string;
 
-  constructor() {
+  constructor(private userService:UserService) {
     this.user = new SignUpUser();
   }
 
   signUp() {
     this.busy = true;
+    this.error = '';
+
     if (this.user.isValid()) {
-      console.log('valid');
-      this.downloadKey();
-    } else {
-      this.busy = false;
-    }
-  }
-
-  downloadKey() {
-    openpgp.initWorker({path: 'node_modules/openpgp/dist/openpgp.worker.js'});
-
-    let options = {
-      userIds: [{name: this.user.name, email: this.user.email}],
-      numBits: 2048,
-      passphrase: this.user.password
-    };
-
-    this.busy = true;
-
-    try {
-      openpgp.generateKey(options)
-        .then((key) => {
-          var key = {
-            'private': key.privateKeyArmored,
-            'public': key.publicKeyArmored,
-          };
-
-          location.href = 'data:application/text, ' + encodeURIComponent(JSON.stringify(key));
-          this.busy = false;
+      this.userService.signUp(this.user)
+        .then(() => {
+          // redirect to safe
         })
         .catch((err) => {
-          console.log(err);
+          this.error = err;
+        })
+        .then(() => {
           this.busy = false;
         });
-    } catch (err) {
-      console.log(err);
+    } else {
       this.busy = false;
+      this.error = 'Invalid user';
     }
   }
+
 }
