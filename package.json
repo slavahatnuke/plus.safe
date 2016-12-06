@@ -1,0 +1,23 @@
+{
+  "name": "plus.safe",
+  "version": "0.0.1",
+  "description": "+safe",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slavahatnuke/plus.safe.git"
+  },
+  "keywords": [
+    "plus",
+    "safe"
+  ],
+  "author": "slava hatnuke, +1G Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slavahatnuke/plus.safe/issues"
+  },
+  "homepage": "https://github.com/slavahatnuke/plus.safe#readme"
+}
