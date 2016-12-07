@@ -23,8 +23,9 @@
       '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
 
+      'angular-2-local-storage': 'npm:angular-2-local-storage/dist',
       // other libraries
-      'rxjs':                      'npm:rxjs'
+      'rxjs': 'npm:rxjs'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -34,6 +35,9 @@
       },
       rxjs: {
         defaultExtension: 'js'
+      },
+      'angular-2-local-storage': {
+        main: 'angular-2-local-storage.js', defaultExtension: 'js'
       }
     }
   });

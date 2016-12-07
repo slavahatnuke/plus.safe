@@ -1,10 +1,14 @@
 import {NgModule}      from '@angular/core';
+
 import {RouterModule}   from '@angular/router';
+import {BrowserModule} from '@angular/platform-browser';
+import {FormsModule}    from '@angular/forms';
 
 import {AppComponent}  from '../app/app.component';
 import {SignUpComponent}  from '../signup/signup.component';
-import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule}    from '@angular/forms';
+import {SignInComponent}  from '../signin/signin.component';
+import {SafeComponent}  from '../safe/safe.component';
+
 
 @NgModule({
   imports: [
@@ -13,18 +17,28 @@ import {FormsModule}    from '@angular/forms';
     RouterModule.forRoot([
       {
         path: '',
-        redirectTo: '/safe',
+        redirectTo: '/signup',
         pathMatch: 'full'
       },
       {
-        path: 'safe',
+        path: 'signup',
         component: SignUpComponent
+      },
+      {
+        path: 'signin',
+        component: SignInComponent
+      },
+      {
+        path: 'safe',
+        component: SafeComponent
       }
     ])
   ],
   declarations: [
     AppComponent,
-    SignUpComponent
+    SignUpComponent,
+    SignInComponent,
+    SafeComponent
   ]
 })
 export class RoutingModule {
