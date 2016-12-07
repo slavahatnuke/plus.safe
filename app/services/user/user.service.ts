@@ -57,7 +57,8 @@ export class UserService {
       .then(() => this.localStorage.del('identity'))
       .then(() => {
         if (user.useIdentityFile) {
-          return this.downloadService.download(identity.salt, identity);
+          return this.cryptoService.shortFingerPrint(identity)
+            .then((id) => this.downloadService.download(id, identity));
         } else {
           return this.localStorage.set('identity', identity);
         }

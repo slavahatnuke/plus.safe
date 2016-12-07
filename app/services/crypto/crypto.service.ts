@@ -95,6 +95,14 @@ export class CryptoService {
     });
   }
 
+  shortFingerPrint(data:any):Promise<string> {
+    return this.fingerPrint(data).then((print) => print.slice(-8));
+  }
+
+  fingerPrint(data:any):Promise<string> {
+    return Promise.resolve().then(() => this.SHA512.hex(JSON.stringify(data)) as string);
+  }
+
   private encryptByPasswordKey(data:any, key:CryptoPasswordKey):Promise<string> {
     return new Promise<string>((resolve, reject) => {
       openpgp.encrypt({

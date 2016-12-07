@@ -1,10 +1,13 @@
 import {Injectable} from '@angular/core';
 
+declare var saveAs:any;
+
 @Injectable()
 export class DownloadService {
   download(name:string, data:any) {
     return new Promise((resolve, reject) => {
-      location.href = 'data:application/text, ' + encodeURIComponent(JSON.stringify(data));
+      var blob = new Blob([JSON.stringify(data)], {type: "application/text;charset=utf-8"});
+      saveAs(blob, name);
       resolve();
     });
   }
