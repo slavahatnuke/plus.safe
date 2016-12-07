@@ -53,7 +53,7 @@ export class SignInComponent {
 
     this.userService.hasIdentity().then((has) => this.hasIdentity = has);
 
-    this.userService.isSignedUp().then((yes) => {
+    this.userService.hasUser().then((yes) => {
       if (yes) {
         this.router.navigate(['/safe']);
       }
@@ -61,8 +61,8 @@ export class SignInComponent {
 
   }
 
-  setIdentity($event:any) {
-    this.user.identity = $event[0];
+  setIdentity([text]) {
+    this.user.identity = text;
     this.hasIdentity = true;
   }
 

@@ -20,13 +20,7 @@ export class UserService {
               private downloadService:DownloadService) {
   }
 
-  isSignedUp() {
-    return new Promise<boolean>((resolve) => {
-      resolve(!!this.user)
-    });
-  }
-
-  isSignedIn() {
+  hasUser() {
     return new Promise<boolean>((resolve) => {
       resolve(!!this.user)
     });
@@ -85,9 +79,16 @@ export class UserService {
 
         return key.definePassword(user.password)
           .then(() => this.cryptoService.decrypt(identity.data, key))
-          .then((data) => this.user = data as User)
-          .then(() => {
-            console.log(this.user);
+          .then((data) => {
+            this.user = new User();
+
+            this.user.name = data.name;
+            this.user.email = data.email;
+            this.user.useIdentityFile = data.useIdentityFile;
+
+            this.user.key = new CryptoPairKey();
+            this.user.key.public = data.key.public;
+            this.user.key.private = data.key.private;
           })
       });
   }
@@ -100,5 +101,17 @@ export class UserService {
 
   hasIdentity():Promise<boolean> {
     return this.localStorage.get('identity').then((_identity) => !!_identity);
+  }
+
+  download(name:string, data:any) {
+    return this.encrypt(data).then((result) => this.downloadService.download(name, result));
+  }
+
+  encrypt(data:any):Promise<string> {
+    return this.cryptoService.encrypt(data, this.user.key);
+  }
+
+  decrypt(data:string):Promise<any> {
+    return this.cryptoService.decrypt(data, this.user.key);
   }
 }

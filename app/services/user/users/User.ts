@@ -5,8 +5,4 @@ export class User {
   public email:string;
   public key:CryptoPairKey|null;
   public useIdentityFile:boolean = true;
-
-  resetKey() {
-    this.key = null;
-  }
 }

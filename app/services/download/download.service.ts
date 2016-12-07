@@ -6,7 +6,8 @@ declare var saveAs:any;
 export class DownloadService {
   download(name:string, data:any) {
     return new Promise((resolve, reject) => {
-      var blob = new Blob([JSON.stringify(data)], {type: "application/text;charset=utf-8"});
+      let value = typeof data == 'string' ? data : JSON.stringify(data);
+      let blob = new Blob([value], {type: "application/text;charset=utf-8"});
       saveAs(blob, name);
       resolve();
     });

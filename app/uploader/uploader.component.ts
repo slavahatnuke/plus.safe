@@ -16,7 +16,7 @@ export class UploaderComponent {
 
   @Input() title:string;
   @Input() multiple:boolean = false;
-  @Output() onUpload:EventEmitter = new EventEmitter();
+  @Output() onUpload:EventEmitter<string[]> = new EventEmitter();
 
   read(file:File) {
     return new Promise((resolve, reject) => {

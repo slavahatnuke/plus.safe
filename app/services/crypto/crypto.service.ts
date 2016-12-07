@@ -49,10 +49,11 @@ export class CryptoService {
     return new Promise<CryptoPairKey>((resolve, reject) => {
       openpgp.generateKey(options)
         .then((key:any) => {
-          resolve({
-            'private': key.privateKeyArmored,
-            'public': key.publicKeyArmored,
-          } as CryptoPairKey);
+          let pairKey = new CryptoPairKey();
+          pairKey.public = key.publicKeyArmored;
+          pairKey.private = key.privateKeyArmored;
+
+          resolve(pairKey);
         })
         .catch(reject);
     });
@@ -148,7 +149,7 @@ export class CryptoService {
       openpgp.decrypt({
         message: openpgp.message.readArmored(data),
         publicKeys: openpgp.key.readArmored(key.public).keys,
-        privateKeys: openpgp.key.readArmored(key.private).keys
+        privateKey: openpgp.key.readArmored(key.private).keys[0]
       })
         .then((result:any) => {
           resolve(JSON.parse(result.data));

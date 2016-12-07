@@ -53,9 +53,9 @@ export class SignUpComponent {
     this.user.password = 'pass';
     this.user.password2 = 'pass';
 
-    this.userService.isSignedUp()
-      .then((yes) => {
-        if (yes) {
+    this.userService.hasUser()
+      .then((has) => {
+        if (has) {
           this.router.navigate(['/signin']);
         } else {
           return this.userService.hasIdentity().then((has) => {
