@@ -10,14 +10,21 @@ import {Router} from '@angular/router';
 <h1>Sign In</h1>
 
 <div *ngIf="!busy" >
-  <form (ngSubmit)="signIn()">
+  <form (ngSubmit)="signIn()" *ngIf="hasIdentity">
     <input type="password" placeholder="Password" name="password" [(ngModel)]="user.password" required>
     <button>Sign In</button>
   </form>
 
-<div *ngIf="hasIdentity || error">
-  <a routerLink="/signup" (click)="signOut()">Sign out</a>
-</div>
+  <div *ngIf="hasIdentity">
+    <p>You have identity</p>
+    <a routerLink="/signup" (click)="signOut()">Sign out</a>
+  </div>
+  
+  <div *ngIf="!hasIdentity">
+    <p>You have no identity, you can sign up or upload it</p>
+    <a routerLink="/signup" (click)="signOut()">Sign up</a>
+    <uploader [title]="'Upload identity'" [multiple]="false" (onUpload)="setIdentity($event)"></uploader>
+  </div>
 
 </div>
 
@@ -29,7 +36,6 @@ please wait...
 {{error}}
 </div>
 `
-
 })
 export class SignInComponent {
 
@@ -45,7 +51,19 @@ export class SignInComponent {
     this.user = new SignInUser();
     this.user.password = 'pass';
 
-    this.userService.hasIdentity().then((yes) => this.hasIdentity = yes)
+    this.userService.hasIdentity().then((has) => this.hasIdentity = has);
+
+    this.userService.isSignedUp().then((yes) => {
+      if (yes) {
+        this.router.navigate(['/safe']);
+      }
+    });
+
+  }
+
+  setIdentity($event:any) {
+    this.user.identity = $event[0];
+    this.hasIdentity = true;
   }
 
   signIn() {

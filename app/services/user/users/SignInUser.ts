@@ -7,8 +7,8 @@ export class SignInUser {
       if(!this.identity) {
         return reject();
       }
-      
-      resolve(this.identity);
+
+      resolve(JSON.parse(this.identity));
     });
   }
 }

@@ -7,6 +7,6 @@ import {Router} from '@angular/router';
 })
 export class SafeComponent {
   constructor(private router:Router) {
-    this.router.navigate(['/']);
+    
   }
 }
