@@ -96,8 +96,6 @@ export class CryptoService {
   }
 
   private encryptByPasswordKey(data:any, key:CryptoPasswordKey):Promise<string> {
-    console.log('encrypt with pass:' + key.getPassword());
-
     return new Promise<string>((resolve, reject) => {
       openpgp.encrypt({
         data: JSON.stringify(data),

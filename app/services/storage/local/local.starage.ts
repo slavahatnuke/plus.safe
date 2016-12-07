@@ -14,14 +14,14 @@ export class LocalStorage implements IStorage {
   }
 
   get(name:string):Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(this.localStorageService.get(name));
     })
   }
 
   del(name:string):Promise<boolean> {
-    return new Promise((resolve, reject) => {
-
-    })
+    return new Promise((resolve) => {
+      resolve(this.localStorageService.remove(name));
+    });
   }
 }

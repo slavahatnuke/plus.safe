@@ -15,6 +15,10 @@ import {Router} from '@angular/router';
     <button>Sign In</button>
   </form>
 
+<div *ngIf="hasIdentity || error">
+  <a routerLink="/signup" (click)="signOut()">Sign out</a>
+</div>
+
 </div>
 
 <div *ngIf="busy">
@@ -33,11 +37,15 @@ export class SignInComponent {
 
   busy:boolean;
   error:string;
+  hasIdentity:boolean = false;
 
   constructor(private userService:UserService,
               private router:Router) {
+
     this.user = new SignInUser();
     this.user.password = 'pass';
+
+    this.userService.hasIdentity().then((yes) => this.hasIdentity = yes)
   }
 
   signIn() {
@@ -54,5 +62,11 @@ export class SignInComponent {
       .then(() => {
         this.busy = false;
       });
+  }
+
+  signOut() {
+    this.userService.signOut().then(() => {
+      this.router.navigate(['']);
+    });
   }
 }

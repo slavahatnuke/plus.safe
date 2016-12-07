@@ -9,13 +9,15 @@ import {LocalStorage} from '../storage/local/local.starage';
 import {CryptoPasswordKey} from "../crypto/keys/CryptoPasswordKey";
 import {User} from "./users/User";
 import {CryptoPairKey} from "../crypto/keys/CryptoPairKey";
+import {DownloadService} from "../download/download.service";
 
 @Injectable()
 export class UserService {
   user:User;
 
   constructor(private cryptoService:CryptoService,
-              private localStorage:LocalStorage) {
+              private localStorage:LocalStorage,
+              private downloadService:DownloadService) {
   }
 
   isSignedUp() {
@@ -36,6 +38,7 @@ export class UserService {
 
     user.name = signUpUser.name;
     user.email = signUpUser.email;
+    user.useIdentityFile = signUpUser.useIdentityFile;
 
     return this.cryptoService.generatePairKey(user.name, user.email)
       .then((key:CryptoPairKey) => {
@@ -51,42 +54,50 @@ export class UserService {
             identity.data = data;
           });
       })
-      .then(() => this.localStorage.set('identity', identity))
+      .then(() => this.localStorage.del('identity'))
+      .then(() => {
+        if (user.useIdentityFile) {
+          return this.downloadService.download(identity.salt, identity);
+        } else {
+          return this.localStorage.set('identity', identity);
+        }
+      })
       .then(() => this.user = user)
       .then(() => identity);
   }
 
   signIn(user:SignInUser) {
-    return this.localStorage.get('identity').then((_identity) => {
-      if (!_identity) {
-        return Promise.reject(new Error('No identity'));
-      }
+    return user.getIdentity()
+      .catch(() => {
+        return this.localStorage.get('identity');
+      })
+      .then((_identity) => {
+        if (!_identity) {
+          return Promise.reject(new Error('No identity'));
+        }
 
-      let identity = _identity as Identity;
-      let key = new CryptoPasswordKey();
+        let identity = _identity as Identity;
+        let key = new CryptoPasswordKey();
 
-      key.salt = identity.salt;
-      key.iterations = identity.iterations;
+        key.salt = identity.salt;
+        key.iterations = identity.iterations;
 
-      return key.definePassword(user.password)
-        .then(() => this.cryptoService.decrypt(identity.data, key))
-        .then((data) => this.user = data as User)
-        .then(() => {
-          console.log(this.user);
-        })
-        .then(() => this.user)
-        .catch((err) => {
-          console.log(err, err.stack);
-          return Promise.reject(err);
-        });
-    });
+        return key.definePassword(user.password)
+          .then(() => this.cryptoService.decrypt(identity.data, key))
+          .then((data) => this.user = data as User)
+          .then(() => {
+            console.log(this.user);
+          })
+      });
   }
 
   signOut() {
-    return new Promise((resolve, reject) => {
-      console.log('sign out', this.user);
-      this.user = null;
-      resolve();
-    });
+    return Promise.resolve()
+      .then(() => this.localStorage.del('identity'))
+      .then(() => this.user = null);
+  }
+
+  hasIdentity():Promise<boolean> {
+    return this.localStorage.get('identity').then((_identity) => !!_identity);
   }
 }

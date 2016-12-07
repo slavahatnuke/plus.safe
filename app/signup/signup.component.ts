@@ -17,9 +17,14 @@ import {DownloadService} from "../services/download/download.service";
     <input type="email" placeholder="Email" name="email" [(ngModel)]="user.email" required>
     <input type="password" placeholder="Password" name="password" [(ngModel)]="user.password" required>
     <input type="password" placeholder="Re-enter password" name="password2" [(ngModel)]="user.password2" required>
+    <label>
+      <span>Use identity file</span>
+      <input type="checkbox" name="use-identity" [(ngModel)]="user.useIdentityFile">
+    </label>
     <button>sign in</button>
   </form>
 
+  <a routerLink="/signin">Do you have Identity?</a>
 </div>
 
 <div *ngIf="busy">
@@ -41,8 +46,7 @@ export class SignUpComponent {
   error:string;
 
   constructor(private userService:UserService,
-              private router:Router,
-              private downloadService:DownloadService) {
+              private router:Router) {
     this.user = new SignUpUser();
     this.user.name = 'test';
     this.user.email = 'email@email.com';
@@ -62,8 +66,7 @@ export class SignUpComponent {
 
     if (this.user.isValid()) {
       this.userService.signUp(this.user)
-        .then((identity:Identity) => {
-          this.downloadService.download('identity', identity);
+        .then(() => {
           this.router.navigate(['/safe']);
         })
         .catch((err) => {
