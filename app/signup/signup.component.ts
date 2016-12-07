@@ -1,26 +1,30 @@
 import {Component} from '@angular/core';
-import {SignUpUser} from '../services/user/SignUpUser';
+import {SignUpUser} from '../services/user/users/SignUpUser';
 
 import {UserService} from '../services/user/user.service';
 import {Router} from '@angular/router';
+import {Identity} from "../services/user/users/Identity";
+import {DownloadService} from "../services/download/download.service";
 
 @Component({
   selector: 'signup',
   template: `
-<h1>Sign Up</h1>
+<h1>Identity</h1>
 
 <div *ngIf="!busy" >
   <form (ngSubmit)="signUp()">
     <input type="text" placeholder="Name" name="name" [(ngModel)]="user.name" required>
+    <input type="email" placeholder="Email" name="email" [(ngModel)]="user.email" required>
     <input type="password" placeholder="Password" name="password" [(ngModel)]="user.password" required>
     <input type="password" placeholder="Re-enter password" name="password2" [(ngModel)]="user.password2" required>
-    <button>SignUp</button>
+    <button>sign in</button>
   </form>
 
 </div>
 
 <div *ngIf="busy">
-please wait...
+<p>Identity and certificates are being generated.</p>
+<p>pleas wait...</p>
 </div>
 
 <div *ngIf="error">
@@ -37,11 +41,13 @@ export class SignUpComponent {
   error:string;
 
   constructor(private userService:UserService,
-              private router:Router) {
+              private router:Router,
+              private downloadService:DownloadService) {
     this.user = new SignUpUser();
     this.user.name = 'test';
-    this.user.password = 'pass1';
-    this.user.password2 = 'pass1';
+    this.user.email = 'email@email.com';
+    this.user.password = 'pass';
+    this.user.password2 = 'pass';
 
     this.userService.isSignedUp().then((yes) => {
       if (yes) {
@@ -54,10 +60,10 @@ export class SignUpComponent {
     this.busy = true;
     this.error = '';
 
-
     if (this.user.isValid()) {
       this.userService.signUp(this.user)
-        .then(() => {
+        .then((identity:Identity) => {
+          this.downloadService.download('identity', identity);
           this.router.navigate(['/safe']);
         })
         .catch((err) => {
@@ -68,7 +74,7 @@ export class SignUpComponent {
         });
     } else {
       this.busy = false;
-      this.error = 'Invalid user';
+      this.error = 'Invalid identity';
     }
   }
 

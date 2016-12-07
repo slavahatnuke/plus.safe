@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {SignInUser} from '../services/user/SignInUser';
+import {SignInUser} from '../services/user/users/SignInUser';
 
 import {UserService} from '../services/user/user.service';
 import {Router} from '@angular/router';
@@ -11,7 +11,6 @@ import {Router} from '@angular/router';
 
 <div *ngIf="!busy" >
   <form (ngSubmit)="signIn()">
-    <input type="text" placeholder="Name" name="name" [(ngModel)]="user.name" required>
     <input type="password" placeholder="Password" name="password" [(ngModel)]="user.password" required>
     <button>Sign In</button>
   </form>
@@ -38,6 +37,7 @@ export class SignInComponent {
   constructor(private userService:UserService,
               private router:Router) {
     this.user = new SignInUser();
+    this.user.password = 'pass';
   }
 
   signIn() {
@@ -46,7 +46,7 @@ export class SignInComponent {
 
     this.userService.signIn(this.user)
       .then(() => {
-        // redirect to safe
+        this.router.navigate(['/safe']);
       })
       .catch((err) => {
         this.error = err;

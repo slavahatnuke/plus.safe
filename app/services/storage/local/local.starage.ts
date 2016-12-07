@@ -15,6 +15,7 @@ export class LocalStorage implements IStorage {
 
   get(name:string):Promise<any> {
     return new Promise((resolve, reject) => {
+      resolve(this.localStorageService.get(name));
     })
   }
 
