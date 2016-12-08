@@ -33,7 +33,7 @@ export class SafeComponent {
     this.userService.download('test', this.value)
   }
 
-  onUpload([text]) {
-    this.userService.decrypt(text).then((value) => this.value = value);
+  onUpload($event:any) {
+    this.userService.decrypt($event[0] || '').then((value) => this.value = value);
   }
 }

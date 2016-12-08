@@ -61,8 +61,8 @@ export class SignInComponent {
 
   }
 
-  setIdentity([text]) {
-    this.user.identity = text;
+  setIdentity($event:any) {
+    this.user.identity = $event[0] || '';
     this.hasIdentity = true;
   }
 
