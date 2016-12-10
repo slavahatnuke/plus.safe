@@ -7,6 +7,10 @@ export class LocalStorage implements IStorage {
 
   constructor(private localStorageService:LocalStorageService) {}
 
+  create(name:string, value:any):Promise<string> {
+    return this.set(name, value);
+  }
+
   set(name:string, value:any):Promise<boolean> {
     return new Promise((resolve) => {
       resolve(this.localStorageService.set(name, value))

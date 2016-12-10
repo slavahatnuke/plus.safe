@@ -1,30 +1,247 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base href="/">
-    <title>+safe</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="styles.css">
+<head>
+  <base href="/">
+  <title>+safe</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
 
-    <script src="node_modules/openpgp/dist/openpgp.js"></script>
-    <script src="node_modules/jshashes/hashes.js"></script>
-    <script src="node_modules/file-saver/FileSaver.min.js"></script>
+  <script src="node_modules/openpgp/dist/openpgp.js"></script>
+  <script src="node_modules/jshashes/hashes.js"></script>
+  <script src="node_modules/file-saver/FileSaver.min.js"></script>
 
-    <!-- Polyfill(s) for older browsers -->
-    <script src="node_modules/core-js/client/shim.min.js"></script>
+  <!-- Polyfill(s) for older browsers -->
+  <script src="node_modules/core-js/client/shim.min.js"></script>
 
-    <script src="node_modules/zone.js/dist/zone.js"></script>
-    <script src="node_modules/reflect-metadata/Reflect.js"></script>
-    <script src="node_modules/systemjs/dist/system.src.js"></script>
+  <script src="node_modules/zone.js/dist/zone.js"></script>
+  <script src="node_modules/reflect-metadata/Reflect.js"></script>
+  <script src="node_modules/systemjs/dist/system.src.js"></script>
 
-    <script src="systemjs.config.js"></script>
-    <script>
-      System.import('app').catch(function(err){ console.error(err); });
-    </script>
-  </head>
+  <script src="systemjs.config.js"></script>
+  <script>
+    System.import('app').catch(function (err) {
+      console.error(err);
+    });
+  </script>
+</head>
 
-  <body>
-  <plus-safe></plus-safe>
-  </body>
+<body>
+<plus-safe></plus-safe>
+
+
+<!--<script type="text/javascript">-->
+<!--// Your Client ID can be retrieved from your project in the Google-->
+<!--// Developer Console, https://console.developers.google.com-->
+<!--var CLIENT_ID = '755097429197-dhi9ujvmp4pjdu4b3gpjg73miosipod8.apps.googleusercontent.com';-->
+<!--var apiKey = 'AIzaSyBgthgF0XoDAEGoHxzq0vOl7kTo67ah0DQ';-->
+
+<!--var SCOPES = [-->
+<!--'https://www.googleapis.com/auth/drive.file',-->
+<!--'https://www.googleapis.com/auth/drive.metadata',-->
+<!--'https://www.googleapis.com/auth/drive.appdata'-->
+<!--];-->
+
+<!--/**-->
+<!--* Check if current user has authorized this application.-->
+<!--*/-->
+<!--function plus_safe_google_api_auth_is_ready() {-->
+<!--gapi.auth.authorize(-->
+<!--{-->
+<!--'client_id': CLIENT_ID,-->
+<!--'scope': SCOPES.join(' '),-->
+<!--'immediate': true-->
+<!--}, handleAuthResult);-->
+<!--}-->
+
+<!--var oauthToken = null;-->
+<!--/**-->
+<!--* Handle response from authorization server.-->
+<!--*-->
+<!--* @param {Object} authResult Authorization result.-->
+<!--*/-->
+<!--function handleAuthResult(authResult) {-->
+
+<!--var authorizeDiv = document.getElementById('authorize-div');-->
+<!--if (authResult && !authResult.error) {-->
+<!--// Hide auth UI, then load client library.-->
+<!--oauthToken = authResult.access_token;-->
+<!--authorizeDiv.style.display = 'none';-->
+<!--loadDriveApi();-->
+<!--} else {-->
+<!--// Show auth UI, allowing the user to initiate authorization by-->
+<!--// clicking authorize button.-->
+<!--authorizeDiv.style.display = 'inline';-->
+<!--}-->
+<!--}-->
+
+<!--/**-->
+<!--* Initiate auth flow in response to user clicking authorize button.-->
+<!--*-->
+<!--* @param {Event} event Button click event.-->
+<!--*/-->
+<!--function handleAuthClick(event) {-->
+<!--gapi.auth.authorize(-->
+<!--{client_id: CLIENT_ID, scope: SCOPES, immediate: false},-->
+<!--handleAuthResult);-->
+<!--return false;-->
+<!--}-->
+
+<!--/**-->
+<!--* Load Drive API client library.-->
+<!--*/-->
+<!--function loadDriveApi() {-->
+<!--gapi.client.load('drive', 'v3', listFiles);-->
+<!--gapi.load('picker', {'callback': onPickerApiLoad});-->
+<!--}-->
+
+<!--function onPickerApiLoad() {-->
+<!--console.log(oauthToken);-->
+
+<!--var picker = new google.picker.PickerBuilder()-->
+<!--.addView(google.picker.ViewId.FOLDERS)-->
+<!--.addView(google.picker.ViewId.DOCS)-->
+<!--.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)-->
+<!--.setOAuthToken(oauthToken)-->
+<!--.setDeveloperKey(apiKey)-->
+<!--.setCallback(pickerCallback).build();-->
+
+<!--picker.setVisible(true);-->
+<!--}-->
+
+<!--function pickerCallback(data) {-->
+<!--if (data[google.picker.Response.ACTION] === google.picker.Action.PICKED) {-->
+<!--var docs = data[google.picker.Response.DOCUMENTS];-->
+<!--for (var i = 0; i < docs.length; i++) {-->
+<!--var doc = docs[i];-->
+<!--console.log(doc[google.picker.Document.ID]);-->
+<!--}-->
+<!--}-->
+<!--}-->
+
+<!--/**-->
+<!--* Print files.-->
+<!--*/-->
+<!--function listFiles() {-->
+
+<!--var request = gapi.client.request({-->
+<!--'path': '/upload/drive/v3/files',-->
+<!--'method': 'POST',-->
+<!--'params': {-->
+<!--uploadType: 'media',-->
+<!--name: 'test-' + Math.random().toString(16).slice(2)-->
+<!--},-->
+<!--'headers': {-->
+<!--'Content-Type': 'application/text'-->
+<!--},-->
+<!--'body': 'test7'-->
+<!--});-->
+<!--//-->
+<!--request.execute(function (file) {-->
+<!--console.log("Created file " + file.name + " id: " + file.id);-->
+
+<!--gapi.client.drive.files.update({-->
+<!--'fileId': file.id,-->
+<!--'name': 'test-' + Math.random().toString(16).slice(2)-->
+<!--}).execute(function (file) {-->
+<!--console.log("Updated file name" + file.name + " id: " + file.id);-->
+
+<!--var request = gapi.client.request({-->
+<!--'path': 'https://www.googleapis.com/upload/drive/v3/files/' + file.id,-->
+<!--'method': 'PATCH',-->
+<!--'params': {-->
+<!--uploadType: 'media'-->
+<!--},-->
+<!--'headers': {-->
+<!--'Content-Type': 'application/text'-->
+<!--},-->
+<!--'body': 'test7-updated+ fileId: ' + file.id-->
+<!--});-->
+
+<!--request.execute(function (file) {-->
+
+<!--gapi.client.drive.files.get({-->
+<!--'fileId': file.id-->
+<!--}).execute(function (file) {-->
+
+<!--var accessToken = gapi.auth.getToken().access_token;-->
+<!--var xhr = new XMLHttpRequest();-->
+<!--xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/' + file.id + '?alt=media');-->
+
+<!--xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);-->
+<!--xhr.onload = function () {-->
+<!--console.log('content', xhr.response);-->
+<!--};-->
+<!--xhr.onerror = function () {-->
+<!--console.log('error');-->
+<!--};-->
+<!--xhr.send();-->
+<!--//-->
+<!--//            var request = gapi.client.request({-->
+<!--//              'path': file.webContentLink,-->
+<!--//              'method': 'GET'-->
+<!--//            });-->
+<!--//-->
+<!--//            request.execute(function (data) {-->
+<!--//              console.log('data', arguments);-->
+<!--//            })-->
+
+<!--});-->
+<!--});-->
+<!--})-->
+<!--});-->
+<!--//-->
+<!--////    uploadType-->
+<!--//    gapi.client.drive.files-->
+<!--//      .create({ "name" : "savefile.txt", body: 'ok' })-->
+<!--//      .execute(function(file) { console.log("Created file " + file.name + " id: " + file.id); });-->
+
+<!--var request = gapi.client.drive.files.list({-->
+<!--'pageSize': 10,-->
+<!--'fields': "nextPageToken, files(id, name)"-->
+<!--});-->
+
+<!--request.execute(function (resp) {-->
+<!--appendPre('Files:');-->
+<!--var files = resp.files;-->
+<!--if (files && files.length > 0) {-->
+<!--for (var i = 0; i < files.length; i++) {-->
+<!--var file = files[i];-->
+<!--appendPre(file.name + ' (' + file.id + ')');-->
+<!--}-->
+<!--} else {-->
+<!--appendPre('No files found.');-->
+<!--}-->
+<!--});-->
+<!--}-->
+
+<!--/**-->
+<!--* Append a pre element to the body containing the given message-->
+<!--* as its text node.-->
+<!--*-->
+<!--* @param {string} message Text to be placed in pre element.-->
+<!--*/-->
+<!--function appendPre(message) {-->
+<!--var pre = document.getElementById('output');-->
+<!--var textContent = document.createTextNode(message + '\n');-->
+<!--pre.appendChild(textContent);-->
+<!--}-->
+
+<!--</script>-->
+
+<!--<script src="https://apis.google.com/js/client.js?onload=plus_safe_google_api_auth_is_ready"></script>-->
+
+
+<!--<div id="authorize-div" style="display: none">-->
+<!--<span>Authorize access to Drive API</span>-->
+<!--&lt;!&ndash;Button for the user to click to initiate auth sequence &ndash;&gt;-->
+<!--<button id="authorize-button" onclick="handleAuthClick(event)">-->
+<!--Authorize-->
+<!--</button>-->
+<!--</div>-->
+<!--<pre id="output"></pre>-->
+
+</body>
+
+
 </html>
