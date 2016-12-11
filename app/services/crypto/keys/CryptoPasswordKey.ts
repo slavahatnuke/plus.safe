@@ -3,7 +3,9 @@ declare var Hashes:any;
 
 export class CryptoPasswordKey extends CryptoKey {
   public salt:string;
-  public iterations:number = 8;
+  public iterations:number = 16;
+
+  private passwordLength:number = 16;
 
   private password:string;
   private SHA512:any;
@@ -19,8 +21,24 @@ export class CryptoPasswordKey extends CryptoKey {
         return reject(new Error('No salt'));
       }
 
-      //  @@@ todo set this.iterations based on time in ms, to encrypt
-      this.iterations = 24;
+      let startedAt = new Date().getTime();
+      let saltedPassword = this.SHA512.hex('test' + this.salt);
+      let passwords:string[] = [];
+
+      let now:number = new Date().getTime();
+
+      for (var estimatedIteration = 0; now - startedAt < timeInMs; estimatedIteration++) {
+        for (var j = 0; j < this.passwordLength; j++) {
+          passwords[j] = this.SHA512.hex(saltedPassword + this.salt);
+          saltedPassword = passwords.join('');
+        }
+
+        if (estimatedIteration % 10) {
+          now = new Date().getTime();
+        }
+      }
+
+      this.iterations = Math.round(estimatedIteration * 1.5);
       resolve(this.iterations);
     });
   }
@@ -31,15 +49,22 @@ export class CryptoPasswordKey extends CryptoKey {
         return reject(new Error('No salt'));
       }
 
-      let password = this.SHA512.hex(originPassword + this.salt);
-      let passwordHash = this.SHA512.hex(originPassword + password + this.salt);
+      let passwords:string[] = [];
 
-      for (var i = 0; i < this.iterations; i++) {
-        password = this.SHA512.hex(password + this.salt + i);
-        passwordHash = this.SHA512.hex(password + passwordHash + this.salt + i);
+      let saltedPassword = this.SHA512.hex(originPassword + this.salt);
+      for (var j = 0; j < this.passwordLength; j++) {
+        passwords[j] = this.SHA512.hex(originPassword + saltedPassword + this.salt);
+        saltedPassword = passwords.join('');
       }
 
-      this.password = password + passwordHash;
+      for (var i = 0; i < this.iterations; i++) {
+        for (var j = 0; j < this.passwordLength; j++) {
+          passwords[j] = this.SHA512.hex(saltedPassword + this.salt);
+          saltedPassword = passwords.join('');
+        }
+      }
+
+      this.password = passwords.join('');
       resolve(this.password);
     });
   }
