@@ -9,6 +9,7 @@ import {SignUpComponent}  from '../signup/signup.component';
 import {SignInComponent}  from '../signin/signin.component';
 import {SafeComponent}  from '../safe/safe.component';
 import {UploaderComponent}  from '../uploader/uploader.component';
+import {SafeTestComponent} from "../safe-test/safe-test.component";
 
 
 @NgModule({
@@ -32,6 +33,10 @@ import {UploaderComponent}  from '../uploader/uploader.component';
       {
         path: 'safe',
         component: SafeComponent
+      },
+      {
+        path: 'safe-test',
+        component: SafeTestComponent
       }
     ])
   ],
@@ -40,7 +45,8 @@ import {UploaderComponent}  from '../uploader/uploader.component';
     SignUpComponent,
     SignInComponent,
     SafeComponent,
-    UploaderComponent
+    UploaderComponent,
+    SafeTestComponent
   ]
 })
 export class RoutingModule {

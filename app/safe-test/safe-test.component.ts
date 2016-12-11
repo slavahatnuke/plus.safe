@@ -5,10 +5,16 @@ import {UserService} from "../services/user/user.service";
 @Component({
   selector: 'safe',
   template: `<h1>Safe</h1>
-  <a routerLink="/safe-test">Safe test app</a>
+
+<form>
+  <textarea style="width: 400px; min-height: 200px" name="value" [(ngModel)]="value"></textarea>
+</form>
+
+<button (click)="save()">save</button>
+<uploader [title]="'upload'" [multiple]="false" (onUpload)="onUpload($event)"></uploader>
 `,
 })
-export class SafeComponent {
+export class SafeTestComponent {
 
   public value:string;
 
