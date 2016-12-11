@@ -47,29 +47,10 @@ export class SignInComponent {
   hasIdentity:boolean = false;
 
   constructor(private userService:UserService,
-              private router:Router,
-              private storageContainer:StorageContainer) {
+              private router:Router) {
 
     this.user = new SignInUser();
     this.user.password = 'pass';
-    //
-    // storageContainer.get('drive')
-    //   .then((storage) => {
-    //     var name2 = 'ng-' + Math.random() + '.txt';
-    //
-    //       return Promise.resolve()
-    //       .then(() => storage.create(name2, Math.random()))
-    //       .then((id) => {
-    //         return Promise.resolve()
-    //           .then(() => storage.get(id))
-    //           .then((content:any) => console.log(content))
-    //           .then(() => storage.set(id, 'ok-' + Math.random()))
-    //
-    //           .then(() => storage.get(id))
-    //           .then((content:any) => console.log('>> updated', content, name2))
-    //           .then(() => storage.del(id))
-    //       })
-    //   });
 
     this.userService.hasIdentity().then((has) => this.hasIdentity = has);
 
