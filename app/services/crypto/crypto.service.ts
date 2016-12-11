@@ -5,6 +5,7 @@ declare var Hashes:any;
 import {Injectable} from '@angular/core';
 import {CryptoPairKey} from './keys/CryptoPairKey';
 import {CryptoPasswordKey} from './keys/CryptoPasswordKey';
+import {CryptoPasswordEntity} from "./keys/CryptoPasswordEntity";
 
 @Injectable()
 export class CryptoService {
@@ -84,6 +85,27 @@ export class CryptoService {
     });
   }
 
+  decryptByPassword(stringEntity:string, password:string):Promise<any> {
+    return Promise.resolve()
+      .then(() => JSON.parse(stringEntity) as CryptoPasswordEntity)
+      .then((entity:CryptoPasswordEntity) => {
+        return Promise.resolve()
+          .then(() => {
+            let key = new CryptoPasswordKey();
+            key.salt = entity.salt;
+            key.iterations = entity.iterations;
+            return key.definePassword(password)
+              .then(() => key);
+          })
+          .then((key) => this.decrypt(entity.data, key));
+      });
+  }
+
+  encryptByPassword(data:any, password:string, estimatedEncryptionTimeInMs:number = 1000):Promise<any> {
+    return this.generatePasswordKey(password, estimatedEncryptionTimeInMs)
+      .then((key:CryptoPasswordKey) => this.encrypt(data, key));
+  }
+
   decrypt(data:string, key:CryptoKey):Promise<any> {
     return Promise.resolve().then(() => {
       if (key instanceof CryptoPasswordKey) {
@@ -105,13 +127,18 @@ export class CryptoService {
   }
 
   private encryptByPasswordKey(data:any, key:CryptoPasswordKey):Promise<string> {
+    let entity = new CryptoPasswordEntity();
+    entity.salt = key.salt;
+    entity.iterations = key.iterations;
+
     return new Promise<string>((resolve, reject) => {
       openpgp.encrypt({
         data: JSON.stringify(data),
         passwords: [key.getPassword()]
       })
         .then((ciphertext:any) => {
-          resolve(ciphertext.data);
+          entity.data = ciphertext.data;
+          resolve(JSON.stringify(entity));
         })
         .catch(reject);
     });

@@ -3,8 +3,6 @@ import {SignUpUser} from '../services/user/users/SignUpUser';
 
 import {UserService} from '../services/user/user.service';
 import {Router} from '@angular/router';
-import {Identity} from "../services/user/users/Identity";
-import {DownloadService} from "../services/download/download.service";
 
 @Component({
   selector: 'signup',

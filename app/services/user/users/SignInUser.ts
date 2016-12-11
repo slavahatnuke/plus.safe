@@ -3,12 +3,6 @@ export class SignInUser {
   public identity:string = '';
 
   getIdentity() {
-    return new Promise((resolve, reject) => {
-      if(!this.identity) {
-        return reject();
-      }
-
-      resolve(JSON.parse(this.identity));
-    });
+    return Promise.resolve().then(() => this.identity || Promise.reject('Without Identity'));
   }
 }
