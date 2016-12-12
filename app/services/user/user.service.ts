@@ -55,13 +55,17 @@ export class UserService {
 
   signIn(user:SignInUser) {
     return user.getIdentity()
-      .catch(() => {
-        return this.getLocalStorage()
-          .then((localStorage) => localStorage.get('identity'));
+      .then((identity:string) => {
+        if (identity) {
+          return identity;
+        } else {
+          return this.getLocalStorage()
+            .then((localStorage) => localStorage.get('identity'));
+        }
       })
-      .then((identity) => identity || Promise.reject(new Error('No identity')))
-      .then((identity) => this.cryptoService.decryptByPassword(identity, user.password) as User)
-      .then((data) => {
+      .then((identity:any) => identity || Promise.reject(new Error('No identity')))
+      .then((identity:any) => this.cryptoService.decryptByPassword(identity, user.password))
+      .then((data:any) => {
         this.user = new User();
         this.user.deserialize(data);
       })

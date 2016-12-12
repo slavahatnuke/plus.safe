@@ -10,8 +10,6 @@ import {UserService} from "../services/user/user.service";
 })
 export class SafeComponent {
 
-  public value:string;
-
   constructor(private router:Router,
               private userService:UserService) {
 
@@ -23,11 +21,4 @@ export class SafeComponent {
       });
   }
 
-  save() {
-    this.userService.download('test', this.value)
-  }
-
-  onUpload($event:any) {
-    this.userService.decrypt($event[0] || '').then((value) => this.value = value);
-  }
 }
