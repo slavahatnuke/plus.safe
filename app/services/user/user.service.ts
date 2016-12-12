@@ -5,7 +5,6 @@ import {SignInUser} from './users/SignInUser';
 
 import {CryptoService} from '../crypto/crypto.service';
 import {LocalStorage} from '../storage/local/local.storage';
-import {CryptoPasswordKey} from "../crypto/keys/CryptoPasswordKey";
 import {User} from "./users/User";
 import {CryptoPairKey} from "../crypto/keys/CryptoPairKey";
 import {DownloadService} from "../download/download.service";

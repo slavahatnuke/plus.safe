@@ -14,6 +14,7 @@ export class CryptoService {
   private saltLength:number = 2048 / 512;
   private saltIterations:number = 2048 / 32;
 
+  private estimatedEncryptionTimeInMs = 100;
   private SHA512:any;
 
   constructor() {
@@ -61,9 +62,10 @@ export class CryptoService {
   }
 
 
-  generatePasswordKey(password:string, estimatedEncryptionTimeInMs:number = 1000):Promise<CryptoPasswordKey> {
+  generatePasswordKey(password:string, estimatedEncryptionTimeInMs:number = 0):Promise<CryptoPasswordKey> {
     let key = new CryptoPasswordKey();
 
+    estimatedEncryptionTimeInMs = estimatedEncryptionTimeInMs || this.estimatedEncryptionTimeInMs;
     return this.generateSalt()
       .then((salt) => {
         key.salt = salt;
@@ -101,7 +103,7 @@ export class CryptoService {
       });
   }
 
-  encryptByPassword(data:any, password:string, estimatedEncryptionTimeInMs:number = 1000):Promise<any> {
+  encryptByPassword(data:any, password:string, estimatedEncryptionTimeInMs:number = 0):Promise<any> {
     return this.generatePasswordKey(password, estimatedEncryptionTimeInMs)
       .then((key:CryptoPasswordKey) => this.encrypt(data, key));
   }

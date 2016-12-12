@@ -5,7 +5,8 @@ import {UserService} from "../services/user/user.service";
 @Component({
   selector: 'safe',
   template: `<h1>Safe</h1>
-  <a routerLink="/safe-test">Safe test app</a>
+  <a routerLink="/safe/simple">Simple</a>
+  <router-outlet></router-outlet>
 `,
 })
 export class SafeComponent {

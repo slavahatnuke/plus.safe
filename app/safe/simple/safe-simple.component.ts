@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
-import {UserService} from "../services/user/user.service";
+import {UserService} from "../../services/user/user.service";
 
 @Component({
   selector: 'safe',
-  template: `<h1>Safe</h1>
+  template: `<h2>Simple</h2>
 
 <form>
   <textarea style="width: 400px; min-height: 200px" name="value" [(ngModel)]="value"></textarea>
@@ -14,7 +14,7 @@ import {UserService} from "../services/user/user.service";
 <uploader [title]="'upload'" [multiple]="false" (onUpload)="onUpload($event)"></uploader>
 `,
 })
-export class SafeTestComponent {
+export class SafeSimpleComponent {
 
   public value:string;
 

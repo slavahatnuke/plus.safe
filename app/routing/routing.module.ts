@@ -9,14 +9,15 @@ import {SignUpComponent}  from '../signup/signup.component';
 import {SignInComponent}  from '../signin/signin.component';
 import {SafeComponent}  from '../safe/safe.component';
 import {UploaderComponent}  from '../uploader/uploader.component';
-import {SafeTestComponent} from "../safe-test/safe-test.component";
+import {SafeSimpleComponent} from "../safe/simple/safe-simple.component";
 
 
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot([
+    RouterModule.forRoot([]),
+    RouterModule.forChild([
       {
         path: '',
         redirectTo: '/signup',
@@ -32,11 +33,13 @@ import {SafeTestComponent} from "../safe-test/safe-test.component";
       },
       {
         path: 'safe',
-        component: SafeComponent
-      },
-      {
-        path: 'safe-test',
-        component: SafeTestComponent
+        component: SafeComponent,
+        children: [
+          {
+            path: 'simple',
+            component: SafeSimpleComponent
+          }
+        ]
       }
     ])
   ],
@@ -46,7 +49,7 @@ import {SafeTestComponent} from "../safe-test/safe-test.component";
     SignInComponent,
     SafeComponent,
     UploaderComponent,
-    SafeTestComponent
+    SafeSimpleComponent
   ]
 })
 export class RoutingModule {
