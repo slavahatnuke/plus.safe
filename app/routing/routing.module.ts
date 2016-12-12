@@ -4,7 +4,7 @@ import {RouterModule}   from '@angular/router';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule}    from '@angular/forms';
 
-import {AppComponent}  from '../app/app.component';
+import {AppComponent}  from '../app.component';
 import {SignUpComponent}  from '../signup/signup.component';
 import {SignInComponent}  from '../signin/signin.component';
 import {SafeComponent}  from '../safe/safe.component';

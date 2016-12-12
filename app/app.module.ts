@@ -1,6 +1,6 @@
 import {NgModule}      from '@angular/core';
 
-import {AppComponent}  from './app/app.component';
+import {AppComponent}  from './app.component';
 import {RoutingModule}   from './routing/routing.module';
 
 import {CryptoService} from './services/crypto/crypto.service';
