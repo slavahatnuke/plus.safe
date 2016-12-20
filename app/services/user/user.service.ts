@@ -9,10 +9,13 @@ import {User} from "./users/User";
 import {CryptoPairKey} from "../crypto/keys/CryptoPairKey";
 import {DownloadService} from "../download/download.service";
 import {StorageContainer} from "../storage/storage.container";
+import {CryptoPasswordKey} from "../crypto/keys/CryptoPasswordKey";
+import {IStorage} from "../storage/storage.interface";
 
 @Injectable()
 export class UserService {
-  user:User;
+  private user:User|null;
+  private key:CryptoPasswordKey|null;
 
   constructor(private cryptoService:CryptoService,
               private storageContainer:StorageContainer,
@@ -46,7 +49,7 @@ export class UserService {
                   return this.getLocalStorage();
                 }
               })
-              .then((storage) => storage.create('identity', identity));
+              .then((storage:IStorage) => storage.create('identity', identity));
           })
           .then(() => this.user = user);
       });
@@ -74,7 +77,13 @@ export class UserService {
     return Promise.resolve()
       .then(() => this.getLocalStorage())
       .then((localStorage) => localStorage.del('identity'))
-      .then(() => this.user = null);
+      .then(() => this.lock());
+  }
+
+  lock():Promise<any> {
+    return Promise.resolve()
+      .then(() => this.user = null)
+      .then(() => this.key = null);
   }
 
   hasIdentity():Promise<boolean> {

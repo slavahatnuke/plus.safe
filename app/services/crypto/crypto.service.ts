@@ -1,4 +1,5 @@
 import {CryptoKey} from "./keys/CryptoKey";
+
 declare var openpgp:any;
 declare var Hashes:any;
 
@@ -99,7 +100,12 @@ export class CryptoService {
             return key.definePassword(password)
               .then(() => key);
           })
-          .then((key) => this.decrypt(entity.data, key));
+          .then((key) => {
+            return Promise.resolve()
+              .then(() => this.decrypt(entity.data, key))
+              .then((data) => {})
+            ;
+          });
       });
   }
 

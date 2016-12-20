@@ -6,6 +6,10 @@ import {UserService} from "../services/user/user.service";
   selector: 'safe',
   template: `<h1>Safe</h1>
   <a routerLink="/safe/simple">Simple</a>
+  
+  <a (click)="lock()" routerLink="/signin">Lock</a>
+  <a (click)="signOut()" routerLink="/signin">Signout</a>
+  
   <router-outlet></router-outlet>
 `,
 })
@@ -17,9 +21,20 @@ export class SafeComponent {
     this.userService.hasUser()
       .then((has) => {
         if (!has) {
-          this.router.navigate(['/signin']);
+          this.goSignIn();
         }
       });
   }
 
+  private goSignIn() {
+    this.router.navigate(['/signin']);
+  }
+
+  lock() {
+    this.userService.lock().then(() => this.goSignIn())
+  }
+
+  signOut() {
+    this.userService.signOut().then(() => this.goSignIn())
+  }
 }
