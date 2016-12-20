@@ -7,6 +7,7 @@ import {Injectable} from '@angular/core';
 import {CryptoPairKey} from './keys/CryptoPairKey';
 import {CryptoPasswordKey} from './keys/CryptoPasswordKey';
 import {CryptoPasswordEntity} from "./keys/CryptoPasswordEntity";
+import {CryptoPasswordEntityResult} from "./keys/CryptoPasswordEntityResult";
 
 @Injectable()
 export class CryptoService {
@@ -15,18 +16,20 @@ export class CryptoService {
   private saltLength:number = 2048 / 512;
   private saltIterations:number = 2048 / 32;
 
-  private estimatedEncryptionTimeInMs = 100;
+  private estimatedEncryptionTimeInMs = 2048 / 2;
   private SHA512:any;
 
   constructor() {
     openpgp.initWorker({path: 'node_modules/openpgp/dist/openpgp.worker.js'});
     this.SHA512 = new Hashes.SHA512;
+    /// @@@ make it 4k or 8k = 4096 or 8192
+    this.setBitLength(512);
   }
 
   generateRandoms():Promise<string> {
     //@@@ improve randoms
     return new Promise<string>((resolve) => {
-      return resolve(Math.random().toString(35).slice(2));
+      return resolve(Math.random().toString(35).slice(2) + this.SHA512.hex('' + new Date().getTime()));
     });
   }
 
@@ -38,9 +41,7 @@ export class CryptoService {
     }
 
     return Promise.all(promises)
-      .then((salts:string[]) => {
-        return salts.join('');
-      });
+      .then((salts:string[]) => salts.join(''));
   }
 
   generatePairKey(name:string, email:string):Promise<CryptoPairKey> {
@@ -88,7 +89,7 @@ export class CryptoService {
     });
   }
 
-  decryptByPassword(stringEntity:string, password:string):Promise<any> {
+  decryptByPassword(stringEntity:string, password:string):Promise<CryptoPasswordEntityResult> {
     return Promise.resolve()
       .then(() => JSON.parse(stringEntity) as CryptoPasswordEntity)
       .then((entity:CryptoPasswordEntity) => {
@@ -103,15 +104,18 @@ export class CryptoService {
           .then((key) => {
             return Promise.resolve()
               .then(() => this.decrypt(entity.data, key))
-              .then((data) => {})
-            ;
+              .then((data:any) => new CryptoPasswordEntityResult(data, key));
           });
       });
   }
 
-  encryptByPassword(data:any, password:string, estimatedEncryptionTimeInMs:number = 0):Promise<any> {
+  encryptByPassword(data:any, password:string, estimatedEncryptionTimeInMs:number = 0):Promise<CryptoPasswordEntityResult> {
     return this.generatePasswordKey(password, estimatedEncryptionTimeInMs)
-      .then((key:CryptoPasswordKey) => this.encrypt(data, key));
+      .then((key:CryptoPasswordKey) => {
+        return Promise.resolve()
+          .then(() => this.encrypt(data, key))
+          .then((data:string) => new CryptoPasswordEntityResult(data, key));
+      });
   }
 
   decrypt(data:string, key:CryptoKey):Promise<any> {
@@ -204,6 +208,14 @@ export class CryptoService {
       .then((randoms:string[]) => {
         return this.SHA512.hex(randoms.join(''));
       });
+  }
+
+  private setBitLength(bitLength:number) {
+    this.bitLength = bitLength;
+
+    this.saltLength = Math.round(bitLength / 512);
+    this.saltIterations = Math.round(bitLength / 32);
+    this.estimatedEncryptionTimeInMs = Math.round(bitLength / 2);
   }
 
 }

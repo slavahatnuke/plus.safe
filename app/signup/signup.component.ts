@@ -15,10 +15,6 @@ import {Router} from '@angular/router';
     <input type="email" placeholder="Email" name="email" [(ngModel)]="user.email" required>
     <input type="password" placeholder="Password" name="password" [(ngModel)]="user.password" required>
     <input type="password" placeholder="Re-enter password" name="password2" [(ngModel)]="user.password2" required>
-    <label>
-      <span>Use identity file</span>
-      <input type="checkbox" name="use-identity" [(ngModel)]="user.useIdentityFile">
-    </label>
     <button>sign in</button>
   </form>
 

@@ -11,6 +11,7 @@ import {DownloadService} from "../download/download.service";
 import {StorageContainer} from "../storage/storage.container";
 import {CryptoPasswordKey} from "../crypto/keys/CryptoPasswordKey";
 import {IStorage} from "../storage/storage.interface";
+import {CryptoPasswordEntityResult} from "../crypto/keys/CryptoPasswordEntityResult";
 
 @Injectable()
 export class UserService {
@@ -35,21 +36,15 @@ export class UserService {
 
         user.name = signUpUser.name;
         user.email = signUpUser.email;
-        user.useIdentityFile = signUpUser.useIdentityFile;
 
         return this.cryptoService.generatePairKey(user.name, user.email)
           .then((key:CryptoPairKey) => user.key = key)
           .then(() => this.cryptoService.encryptByPassword(user, signUpUser.password))
-          .then((identity) => {
+          .then((result:CryptoPasswordEntityResult) => {
             return Promise.resolve()
-              .then(() => {
-                if (user.useIdentityFile) {
-                  return this.storageContainer.get('files');
-                } else {
-                  return this.getLocalStorage();
-                }
-              })
-              .then((storage:IStorage) => storage.create('identity', identity));
+              .then(() => this.getLocalStorage())
+              .then((storage:IStorage) => storage.create('identity', result.data))
+              .then(() => this.key = result.key);
           })
           .then(() => this.user = user);
       });
@@ -67,10 +62,11 @@ export class UserService {
       })
       .then((identity:any) => identity || Promise.reject(new Error('No identity')))
       .then((identity:any) => this.cryptoService.decryptByPassword(identity, user.password))
-      .then((data:any) => {
+      .then((result:CryptoPasswordEntityResult) => {
         this.user = new User();
-        this.user.deserialize(data);
-      })
+        this.user.deserialize(result.data);
+        this.key = result.key;
+      });
   }
 
   signOut() {
