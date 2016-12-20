@@ -72,4 +72,21 @@ export class CryptoPasswordKey extends CryptoKey {
   getPassword() {
     return this.password;
   }
+
+  verifyPassword(password:string):Promise<boolean> {
+    let key = new CryptoPasswordKey();
+
+    key.salt = this.salt;
+    key.iterations = this.iterations;
+
+    return key.definePassword(password)
+      .then(() => key.getPassword() === this.getPassword())
+      .then((ok) => {
+        if(!ok) {
+          throw new Error('Invalid password');
+        } else {
+          return ok;
+        }
+      })
+  }
 }

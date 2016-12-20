@@ -54,10 +54,12 @@ export class UserService {
     return user.getIdentity()
       .then((identity:string) => {
         if (identity) {
-          return identity;
+          return this.getLocalStorage()
+            .then((localStorage:IStorage) => localStorage.create('identity', identity))
+            .then(() => identity);
         } else {
           return this.getLocalStorage()
-            .then((localStorage) => localStorage.get('identity'));
+            .then((localStorage:IStorage) => localStorage.get('identity'));
         }
       })
       .then((identity:any) => identity || Promise.reject(new Error('No identity')))
@@ -66,7 +68,7 @@ export class UserService {
         this.user = new User();
         this.user.deserialize(result.data);
         this.key = result.key;
-      });
+      })
   }
 
   signOut() {
@@ -100,8 +102,16 @@ export class UserService {
     return this.cryptoService.decrypt(data, this.user.key);
   }
 
+  downloadIdentity() {
+    return this.cryptoService.encrypt(this.user, this.key)
+      .then((data) => this.downloadService.download('identity.safe', data));
+  }
+
   private getLocalStorage():Promise<LocalStorage> {
     return this.storageContainer.get('local');
   }
 
+  verifyPassword(password:string):Promise<any> {
+    return this.key.verifyPassword(password);
+  }
 }
