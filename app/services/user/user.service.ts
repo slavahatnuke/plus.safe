@@ -62,10 +62,12 @@ export class UserService {
       .then((identity:any) => this.cryptoService.decryptByPassword(identity, user.password))
       .then((result:CryptoPasswordEntityResult) => {
         this.user = new User();
-        this.user.deserialize(result.data);
-        this.key = result.key;
 
-        console.log(this.user);
+        return Promise.resolve()
+          .then(() => this.user.deserialize(result.data))
+          .then(() => {
+            this.key = result.key;
+          });
       })
       .then(() => this.saveIdentity())
   }

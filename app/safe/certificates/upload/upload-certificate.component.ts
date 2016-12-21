@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
-import {UserService} from "../../../services/user/user.service";
+import {CertificateService} from "../../../services/certificate/certificate.service";
 
 @Component({
   selector: 'safe-upload-certificate',
@@ -9,8 +9,8 @@ import {UserService} from "../../../services/user/user.service";
   <p>Upload your certificate</p>
   
   <form (ngSubmit)="save()">
-    <input *ngIf="hasCertificate" type="password" name="password" [(ngModel)]="password" placeholder="Certificate password" required>
-    <uploader [title]="'upload'" [multiple]="false" (onUpload)="onUpload($event)"></uploader>
+    <input *ngIf="certificate" type="password" name="password" [(ngModel)]="password" placeholder="Certificate password" required>
+    <uploader *ngIf="!certificate" [title]="'upload'" [multiple]="false" (onUpload)="onUpload($event)"></uploader>
     <button>Save</button>
   </form>
   
@@ -28,20 +28,27 @@ export class SafeUploadCertificateComponent {
   public error:string;
   public wait:boolean = false;
 
-  public hasCertificate:boolean = false;
+  public certificate:string;
   public password:string = '';
 
-  constructor(private userService:UserService, private router:Router) {
+  constructor(private certificateService:CertificateService, private router:Router) {
   }
 
   save() {
     this.error = '';
-    this.wait = false;
+    this.wait = true;
+
+    this.certificateService.addCertificate(this.certificate, this.password)
+      .then(() => this.router.navigate(['safe', 'certificates']))
+      .catch((err) => this.error = err)
+      .then(() => this.wait = false)
   }
 
 
   onUpload($event:any) {
-
+    if ($event[0]) {
+      this.certificate = $event[0];
+    }
   }
 
 }

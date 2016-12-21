@@ -45,8 +45,9 @@ export class SafeNewCertificateComponent {
     if (this.name && this.password && this.password === this.password2) {
       this.wait = true;
       this.certificateService.generate(this.name, this.password)
-        .then(() => this.wait = false)
         .then(() => this.router.navigate(['safe', 'certificates']))
+        .catch((err) => this.error = err)
+        .then(() => this.wait = false)
     } else {
       this.error = 'Wrong passwords';
     }

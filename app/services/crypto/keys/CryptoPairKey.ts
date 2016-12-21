@@ -5,7 +5,12 @@ export class CryptoPairKey extends CryptoKey {
   public private:string = '';
 
   deserialize(data:any) {
-    this.public = data.public;
-    this.private = data.private;
+    data = data as CryptoPairKey;
+    
+    return Promise.resolve()
+      .then(() => {
+        this.public = data.public;
+        this.private = data.private;
+      });
   }
 }

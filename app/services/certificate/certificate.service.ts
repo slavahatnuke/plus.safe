@@ -36,4 +36,17 @@ export class CertificateService {
           .then(() => certificate)
       });
   }
+
+  addCertificate(certificateString:string, password:string):Promise<SafeCertificate> {
+    return Promise.resolve()
+      .then(() => this.cryptoService.decryptByPassword(certificateString, password))
+      .then((result:CryptoPasswordEntityResult) => {
+        let certificate = new SafeCertificate();
+        return Promise.resolve()
+          .then(() => certificate.deserialize(result.data as SafeCertificate))
+          .then(() => certificate)
+          .then((certificate:SafeCertificate) => this.userService.addCertificate(certificate))
+          .then(() => certificate);
+      });
+  }
 }
