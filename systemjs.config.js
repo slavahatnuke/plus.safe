@@ -22,7 +22,6 @@
       '@angular/http': 'npm:@angular/http/bundles/http.umd.js',
       '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
-      'plus.merge-text': 'npm:plus.merge-text/dist/mergeText.common.js',
 
       'angular-2-local-storage': 'npm:angular-2-local-storage/dist',
       // other libraries
