@@ -44,7 +44,7 @@ export class UserService {
           .then((result:CryptoPasswordEntityResult) => this.key = result.key)
           .then(() => this.user = user)
           .then(() => this.saveIdentity())
-          .then(() => this.user);
+          .then(() => this.getUser());
       });
   }
 
@@ -125,7 +125,14 @@ export class UserService {
   }
 
   getUser():Promise<User> {
-    return Promise.resolve(this.user);
+    return Promise.resolve()
+      .then(() => {
+        if (this.user) {
+          return this.user;
+        } else {
+          throw new Error('No user');
+        }
+      });
   }
 
   addCertificate(certificate:SafeCertificate):Promise<SafeCertificate> {
@@ -134,5 +141,17 @@ export class UserService {
       .then((user:User) => user.addCertificate(certificate))
       .then(() => this.saveIdentity())
       .then(() => certificate);
+  }
+
+  getCertificates():Promise<SafeCertificate[]> {
+    return Promise.resolve()
+      .then(() => this.getUser())
+      .then((user:User) => user.certificates);
+  }
+
+  removeCertificate(certificate:SafeCertificate) {
+    return this.getUser()
+      .then((user:User) => user.removeCertificate(certificate))
+      .then(() => this.saveIdentity());
   }
 }

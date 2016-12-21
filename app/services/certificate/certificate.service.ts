@@ -49,4 +49,12 @@ export class CertificateService {
           .then(() => certificate);
       });
   }
+
+  getCertificates() {
+    return this.userService.getCertificates();
+  }
+
+  remove(certificate:SafeCertificate) {
+    return this.userService.removeCertificate(certificate);
+  }
 }

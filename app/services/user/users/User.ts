@@ -41,10 +41,18 @@ export class User {
   addCertificate(certificate:SafeCertificate) {
     return Promise.resolve()
       .then(() => {
-        let found = this.certificates.find((aCertificate) => aCertificate.id == certificate.id);
+        let found = this.certificates.find((aCertificate) => aCertificate.id === certificate.id);
         if(!found) {
           this.certificates.push(certificate);
         }
+      });
+  }
+
+  removeCertificate(certificate:SafeCertificate) {
+    return Promise.resolve()
+      .then(() => {
+        this.certificates = this.certificates
+          .filter((aCertificate) => aCertificate.id !== certificate.id);
       });
   }
 }

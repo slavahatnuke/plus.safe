@@ -1,5 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
+import {SafeCertificate} from "../../services/certificate/certificates/SafeCertificate";
+import {CertificateService} from "../../services/certificate/certificate.service";
 
 @Component({
   selector: 'safe-certificates',
@@ -8,16 +10,13 @@ import {Router} from "@angular/router";
   <div>
     <a routerLink="/safe/certificates/new">new</a>
     <a routerLink="/safe/certificates/upload">upload</a>
+    <a routerLink="/safe/certificates/manage">manage</a>
   </div>
   
   <router-outlet></router-outlet>
 `,
 })
 export class SafeCertificatesComponent {
-  public error:string;
-  public wait:boolean = false;
-
-  constructor(private router:Router) {
+  constructor(private router:Router, private certificateService:CertificateService) {
   }
-
 }
