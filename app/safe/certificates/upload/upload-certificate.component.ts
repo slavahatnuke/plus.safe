@@ -11,7 +11,7 @@ import {CertificateService} from "../../../services/certificate/certificate.serv
   <form (ngSubmit)="save()">
     <input *ngIf="certificate" type="password" name="password" [(ngModel)]="password" placeholder="Certificate password" required>
     <uploader *ngIf="!certificate" [title]="'upload'" [multiple]="false" (onUpload)="onUpload($event)"></uploader>
-    <button>Save</button>
+    <button *ngIf="certificate">Save</button>
   </form>
   
   <div *ngIf="error">
