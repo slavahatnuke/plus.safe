@@ -5,10 +5,15 @@ import {UserService} from "../services/user/user.service";
 @Component({
   selector: 'safe',
   template: `<h1>Safe</h1>
-  <a routerLink="/safe/identity">Identity</a>
-  <a routerLink="/safe/simple">Simple</a>
   
+  <a routerLink="/safe/identity">Identity</a> 
+  | 
+  <a routerLink="/safe/certificates">Certificates</a> 
+  |
+  <a routerLink="/safe/simple">Simple</a>
+  |
   <a (click)="lock()" routerLink="/signin">Lock</a>
+  |
   <a (click)="signOut()" routerLink="/signin">Signout</a>
   
   <router-outlet></router-outlet>

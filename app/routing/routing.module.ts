@@ -11,6 +11,9 @@ import {SafeComponent}  from '../safe/safe.component';
 import {UploaderComponent}  from '../uploader/uploader.component';
 import {SafeSimpleComponent} from "../safe/simple/safe-simple.component";
 import {SafeIdentityComponent} from "../safe/identity/identity.component";
+import {SafeCertificatesComponent} from "../safe/certificates/certificates.component";
+import {SafeNewCertificateComponent} from "../safe/certificates/new/new-certificate.component";
+import {SafeUploadCertificateComponent} from "../safe/certificates/upload/upload-certificate.component";
 
 
 @NgModule({
@@ -41,6 +44,20 @@ import {SafeIdentityComponent} from "../safe/identity/identity.component";
             component: SafeIdentityComponent
           },
           {
+            path: 'certificates',
+            component: SafeCertificatesComponent,
+            children: [
+              {
+                path: 'new',
+                component: SafeNewCertificateComponent
+              },
+              {
+                path: 'upload',
+                component: SafeUploadCertificateComponent
+              }
+            ]
+          },
+          {
             path: 'simple',
             component: SafeSimpleComponent
           }
@@ -55,7 +72,10 @@ import {SafeIdentityComponent} from "../safe/identity/identity.component";
     SafeComponent,
     UploaderComponent,
     SafeSimpleComponent,
-    SafeIdentityComponent
+    SafeIdentityComponent,
+    SafeCertificatesComponent,
+    SafeNewCertificateComponent,
+    SafeUploadCertificateComponent
   ]
 })
 export class RoutingModule {

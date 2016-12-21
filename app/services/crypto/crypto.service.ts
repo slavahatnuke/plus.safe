@@ -131,7 +131,7 @@ export class CryptoService {
   }
 
   shortFingerPrint(data:any):Promise<string> {
-    return this.fingerPrint(data).then((print) => print.slice(-8));
+    return this.fingerPrint(data).then((print) => print.slice(-16));
   }
 
   fingerPrint(data:any):Promise<string> {

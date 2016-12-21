@@ -13,6 +13,7 @@ import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 
 import {LocalStorageService, LOCAL_STORAGE_SERVICE_CONFIG} from 'angular-2-local-storage';
 import {LocalFilesStorage} from "./services/storage/localFiles/local-files.storage";
+import {CertificateService} from "./services/certificate/certificate.service";
 
 let localStorageServiceConfig = {
   prefix: 'plus-safe',
@@ -34,7 +35,8 @@ let localStorageServiceConfig = {
     UserService,
     LocalStorage,
     StorageContainer,
-    LocalFilesStorage
+    LocalFilesStorage,
+    CertificateService
   ],
   declarations: [],
   bootstrap: [AppComponent]

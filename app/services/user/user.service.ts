@@ -12,6 +12,7 @@ import {StorageContainer} from "../storage/storage.container";
 import {CryptoPasswordKey} from "../crypto/keys/CryptoPasswordKey";
 import {IStorage} from "../storage/storage.interface";
 import {CryptoPasswordEntityResult} from "../crypto/keys/CryptoPasswordEntityResult";
+import {SafeCertificate} from "../certificate/certificates/SafeCertificate";
 
 @Injectable()
 export class UserService {
@@ -40,13 +41,10 @@ export class UserService {
         return this.cryptoService.generatePairKey(user.name, user.email)
           .then((key:CryptoPairKey) => user.key = key)
           .then(() => this.cryptoService.encryptByPassword(user, signUpUser.password))
-          .then((result:CryptoPasswordEntityResult) => {
-            return Promise.resolve()
-              .then(() => this.getLocalStorage())
-              .then((storage:IStorage) => storage.create('identity', result.data))
-              .then(() => this.key = result.key);
-          })
-          .then(() => this.user = user);
+          .then((result:CryptoPasswordEntityResult) => this.key = result.key)
+          .then(() => this.user = user)
+          .then(() => this.saveIdentity())
+          .then(() => this.user);
       });
   }
 
@@ -54,9 +52,7 @@ export class UserService {
     return user.getIdentity()
       .then((identity:string) => {
         if (identity) {
-          return this.getLocalStorage()
-            .then((localStorage:IStorage) => localStorage.create('identity', identity))
-            .then(() => identity);
+          return identity;
         } else {
           return this.getLocalStorage()
             .then((localStorage:IStorage) => localStorage.get('identity'));
@@ -68,7 +64,10 @@ export class UserService {
         this.user = new User();
         this.user.deserialize(result.data);
         this.key = result.key;
+
+        console.log(this.user);
       })
+      .then(() => this.saveIdentity())
   }
 
   signOut() {
@@ -104,7 +103,15 @@ export class UserService {
 
   downloadIdentity() {
     return this.cryptoService.encrypt(this.user, this.key)
-      .then((data) => this.downloadService.download('identity.safe', data));
+      .then((data) => this.downloadService.safeDownload(this.user.name + '.identity.safe', data));
+  }
+
+  saveIdentity() {
+    return this.cryptoService.encrypt(this.user, this.key)
+      .then((identity:string) => {
+        return this.getLocalStorage()
+          .then((localStorage:IStorage) => localStorage.create('identity', identity));
+      });
   }
 
   private getLocalStorage():Promise<LocalStorage> {
@@ -113,5 +120,17 @@ export class UserService {
 
   verifyPassword(password:string):Promise<any> {
     return this.key.verifyPassword(password);
+  }
+
+  getUser():Promise<User> {
+    return Promise.resolve(this.user);
+  }
+
+  addCertificate(certificate:SafeCertificate):Promise<SafeCertificate> {
+    return Promise.resolve()
+      .then(() => this.getUser())
+      .then((user:User) => user.addCertificate(certificate))
+      .then(() => this.saveIdentity())
+      .then(() => certificate);
   }
 }

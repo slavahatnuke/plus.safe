@@ -3,9 +3,9 @@ import {Component, Input, Output, EventEmitter, ElementRef, ViewChild} from '@an
 @Component({
   selector: 'uploader',
   template: `
-<form>
+<form style="display: inline;">
   <label>
-    <span style="cursor: pointer">{{title}}</span>
+    <a style="cursor: pointer; color: #000; text-decoration: underline">{{title}}</a>
     <input style="display: none" (change)="onChange($event)" [multiple]="multiple" type="file" name="file" #file>
   </label>
 </form>
