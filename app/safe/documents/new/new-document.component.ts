@@ -12,7 +12,7 @@ import {CertificateService} from "../../../services/certificate/certificate.serv
   <h4>New Document</h4>
   <form (ngSubmit)="save()" *ngIf="certificates.length">
     <input type="text" placeholder="name" name="name" [(ngModel)]="document.name" required>
-    <select [(ngModel)]="document.keyId" name="keyId">
+    <select [(ngModel)]="document.keyId" name="keyId" required>
         <option *ngFor="let certificate of certificates" [value]="certificate.id">{{certificate.name}}</option>
     </select>
     <button>save</button>
@@ -31,6 +31,9 @@ export class SafeNewDocumentComponent implements OnInit {
 
   public document:SafeDocument;
   public certificates:SafeCertificate[] = [];
+
+  public error:string;
+  public wait:boolean = false;
 
   constructor(private router:Router,
               private documentService:DocumentService,
@@ -51,6 +54,14 @@ export class SafeNewDocumentComponent implements OnInit {
   }
 
   save() {
+    this.error = '';
+    this.wait = false;
 
+    this.documentService.save(this.document)
+      .catch((err) => this.error = err)
+      .then(() => {
+        this.wait = false;
+      })
+      .then(() => this.router.navigate(['safe', 'documents']));
   }
 }

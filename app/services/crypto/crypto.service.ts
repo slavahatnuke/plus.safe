@@ -44,6 +44,10 @@ export class CryptoService {
       .then((salts:string[]) => salts.join(''));
   }
 
+  generateId() {
+    return this.generateSalt().then((salt) => this.fingerPrint(salt));
+  }
+  
   generatePairKey(name:string, email:string):Promise<CryptoPairKey> {
     let options = {
       userIds: [{name: name, email: email}],

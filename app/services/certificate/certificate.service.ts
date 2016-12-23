@@ -57,4 +57,17 @@ export class CertificateService {
   remove(certificate:SafeCertificate) {
     return this.userService.removeCertificate(certificate);
   }
+
+  getCertificateById(certificateId:string):Promise<SafeCertificate> {
+    return Promise.resolve()
+      .then(() => this.getCertificates())
+      .then((certificates:SafeCertificate[]) => certificates.find((aCerificate) => aCerificate.id == certificateId))
+      .then((certificate:any) => {
+        if(!certificate) {
+          throw new Error('Certificate was not found');
+        } else {
+          return certificate;
+        }
+      });
+  }
 }
