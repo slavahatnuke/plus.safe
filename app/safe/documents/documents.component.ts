@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {DocumentService} from "../../services/document/docuemtn.service";
+import {SafeDocument} from "../../services/document/SafeDocument";
+import {DocumentService} from "../../services/document/document.service";
 
 @Component({
   selector: 'safe-documents',
@@ -20,7 +21,7 @@ import {DocumentService} from "../../services/document/docuemtn.service";
 `,
 })
 export class SafeDocumentsComponent implements OnInit{
-  private documents:Document[] = [];
+  private documents:SafeDocument[] = [];
   
   constructor(private router:Router, private documentService:DocumentService) {
   }
@@ -28,6 +29,6 @@ export class SafeDocumentsComponent implements OnInit{
   ngOnInit():void {
     this.documentService.load()
       .then(() => this.documentService.getDocuments())
-      .then((documents:Document[]) => this.documents = documents);
+      .then((documents:SafeDocument[]) => this.documents = documents);
   }
 }

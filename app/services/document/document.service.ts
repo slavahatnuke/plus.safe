@@ -4,6 +4,7 @@ import {UserService} from "../user/user.service";
 import {StorageContainer} from "../storage/storage.container";
 import {CryptoService} from "../crypto/crypto.service";
 import {IStorage} from "../storage/storage.interface";
+import {SafeDocument} from "./SafeDocument";
 
 @Injectable()
 export class DocumentService {
@@ -17,7 +18,7 @@ export class DocumentService {
 
   }
 
-  load() {
+  load():Promise<DocumentService> {
     return Promise.resolve()
       .then(() => {
         return this.storageContainer.get('drive')
@@ -27,7 +28,7 @@ export class DocumentService {
       });
   }
 
-  getDocuments() {
+  getDocuments():Promise<SafeDocument[]> {
     return Promise.resolve().then(() => []);
   }
 }

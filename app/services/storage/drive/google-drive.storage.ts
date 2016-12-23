@@ -9,6 +9,7 @@ export class GoogleDriveStorage implements IStorage {
   private CLIENT_ID:string;
   private apiKey:string;
   private contentType:string;
+  private authed:boolean = false;
 
   constructor() {
     /// @@@ make cofigurable
@@ -18,52 +19,59 @@ export class GoogleDriveStorage implements IStorage {
     this.contentType = 'application/text';
   }
 
-  auth() {
+  auth():Promise<GoogleDriveStorage> {
     return Promise.resolve()
       .then(() => {
-        return new Promise((resolve) => {
-          plus_safe_google_api_auth_on_ready.subscribe(resolve);
-        });
-      })
-      .then(() => {
-        var SCOPES = [
-          'https://www.googleapis.com/auth/drive.file',
-          'https://www.googleapis.com/auth/drive.metadata',
-          'https://www.googleapis.com/auth/drive.appdata'
-        ];
+        if (this.authed) {
+          return null;
+        } else {
+          return Promise.resolve()
+            .then(() => {
+              return new Promise((resolve) => {
+                plus_safe_google_api_auth_on_ready.subscribe(resolve);
+              });
+            })
+            .then(() => {
+              var SCOPES = [
+                'https://www.googleapis.com/auth/drive.file',
+                'https://www.googleapis.com/auth/drive.metadata',
+                'https://www.googleapis.com/auth/drive.appdata'
+              ];
 
-        return new Promise((resolve, reject) => {
+              return new Promise((resolve, reject) => {
 
-          gapi.auth.authorize({
-              'client_id': this.CLIENT_ID,
-              'scope': SCOPES.join(' '),
-              'immediate': true
-            },
-            (authResult:any) => {
-              if (authResult && !authResult.error) {
-                resolve();
-              } else {
-                reject();
-              }
+                gapi.auth.authorize({
+                    'client_id': this.CLIENT_ID,
+                    'scope': SCOPES.join(' '),
+                    'immediate': true
+                  },
+                  (authResult:any) => {
+                    if (authResult && !authResult.error) {
+                      resolve();
+                    } else {
+                      reject();
+                    }
+                  });
+              });
+            })
+            .then(() => {
+              var promises:Promise<any>[] = [];
+
+              promises.push(new Promise((resolve) => {
+                gapi.client.load('drive', 'v3', resolve);
+              }));
+
+              promises.push(new Promise((resolve) => {
+                gapi.load('picker', {'callback': resolve});
+              }));
+
+              return Promise.all(promises);
+            })
+            .then(() => {
+              console.log('I have google API');
+              this.authed = true;
             });
-        });
-      })
-      .then(() => {
-        var promises:Promise<any>[] = [];
-
-        promises.push(new Promise((resolve) => {
-          gapi.client.load('drive', 'v3', resolve);
-        }));
-
-        promises.push(new Promise((resolve) => {
-          gapi.load('picker', {'callback': resolve});
-        }));
-
-        return Promise.all(promises);
-      })
-      .then(() => {
-        console.log('I have API');
-
+        }
       })
       .then(() => this);
   }

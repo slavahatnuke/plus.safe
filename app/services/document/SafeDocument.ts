@@ -1,4 +1,4 @@
-export class Document {
+export class SafeDocument {
   public id:string = '';
   public keyId:string = '';
 
