@@ -11,6 +11,7 @@ export class GoogleDriveStorage implements IStorage {
   private contentType:string;
 
   constructor() {
+    /// @@@ make cofigurable
     this.CLIENT_ID = '755097429197-dhi9ujvmp4pjdu4b3gpjg73miosipod8.apps.googleusercontent.com';
     this.apiKey = 'AIzaSyBgthgF0XoDAEGoHxzq0vOl7kTo67ah0DQ';
 
@@ -62,7 +63,9 @@ export class GoogleDriveStorage implements IStorage {
       })
       .then(() => {
         console.log('I have API');
+
       })
+      .then(() => this);
   }
 
   create(name:string, value:any):Promise<string> {

@@ -10,6 +10,8 @@ import {UserService} from "../services/user/user.service";
   | 
   <a routerLink="/safe/certificates">Certificates</a> 
   |
+  <a routerLink="/safe/documents">Documents</a> 
+  |
   <a routerLink="/safe/simple">Simple</a>
   |
   <a (click)="lock()" routerLink="/signin">Lock</a>

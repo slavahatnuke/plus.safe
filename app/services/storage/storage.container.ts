@@ -21,8 +21,8 @@ export class StorageContainer {
       if(this.googleDriveStorage) {
         return Promise.resolve(this.googleDriveStorage);
       } else {
-        var googleDriveStorage = new GoogleDriveStorage();
-        return googleDriveStorage.auth().then(() => this.googleDriveStorage = googleDriveStorage);
+        this.googleDriveStorage = new GoogleDriveStorage();
+        return Promise.resolve().then(() => this.googleDriveStorage);
       }
     } else {
       return Promise.reject(new Error('No storage'));

@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {SafeCertificate} from "../../services/certificate/certificates/SafeCertificate";
-import {CertificateService} from "../../services/certificate/certificate.service";
 
 @Component({
   selector: 'safe-certificates',
@@ -16,7 +14,11 @@ import {CertificateService} from "../../services/certificate/certificate.service
   <router-outlet></router-outlet>
 `,
 })
-export class SafeCertificatesComponent {
-  constructor(private router:Router, private certificateService:CertificateService) {
+export class SafeCertificatesComponent implements OnInit {
+  constructor(private router:Router) {
+  }
+
+  ngOnInit():void {
+    this.router.navigate(['safe', 'certificates', 'manage']);
   }
 }
