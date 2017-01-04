@@ -12,7 +12,7 @@ import {CertificateService} from "../../../services/certificate/certificate.serv
   <h4>New Document</h4>
   <form (ngSubmit)="save()" *ngIf="certificates.length">
     <input type="text" placeholder="name" name="name" [(ngModel)]="document.name" required>
-    <select [(ngModel)]="document.keyId" name="keyId" required>
+    <select [(ngModel)]="document.certificateId" name="certificateId" required>
         <option *ngFor="let certificate of certificates" [value]="certificate.id">{{certificate.name}}</option>
     </select>
     <button>save</button>
@@ -48,7 +48,7 @@ export class SafeNewDocumentComponent implements OnInit {
       .then((certificates:SafeCertificate[]) => this.certificates = certificates)
       .then(() => {
         if (this.certificates.length) {
-          this.document.keyId = this.certificates[0].id;
+          this.document.certificateId = this.certificates[0].id;
         }
       });
   }

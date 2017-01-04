@@ -13,11 +13,15 @@ import {CryptoPasswordKey} from "../crypto/keys/CryptoPasswordKey";
 import {IStorage} from "../storage/storage.interface";
 import {CryptoPasswordEntityResult} from "../crypto/keys/CryptoPasswordEntityResult";
 import {SafeCertificate} from "../certificate/certificates/SafeCertificate";
+import {SafeDocument} from "../document/SafeDocument";
+import {SafeSession} from "./session/SafeSession";
 
 @Injectable()
 export class UserService {
-  private user:User|null;
-  private key:CryptoPasswordKey|null;
+
+  private user:User|null = null;
+  private key:CryptoPasswordKey|null = null;
+  private session:SafeSession|null = null;
 
   constructor(private cryptoService:CryptoService,
               private storageContainer:StorageContainer,
@@ -75,14 +79,19 @@ export class UserService {
   signOut() {
     return Promise.resolve()
       .then(() => this.getLocalStorage())
-      .then((localStorage) => localStorage.del('identity'))
+      .then((localStorage:IStorage) => {
+        return Promise.resolve()
+          .then(() => localStorage.del('identity'))
+          .then(() => localStorage.del('session'));
+      })
       .then(() => this.lock());
   }
 
   lock():Promise<any> {
     return Promise.resolve()
       .then(() => this.user = null)
-      .then(() => this.key = null);
+      .then(() => this.key = null)
+      .then(() => this.session = null);
   }
 
   hasIdentity():Promise<boolean> {
@@ -116,7 +125,7 @@ export class UserService {
       });
   }
 
-  private getLocalStorage():Promise<LocalStorage> {
+  private getLocalStorage():Promise<IStorage> {
     return this.storageContainer.get('local');
   }
 
@@ -153,5 +162,37 @@ export class UserService {
     return this.getUser()
       .then((user:User) => user.removeCertificate(certificate))
       .then(() => this.saveIdentity());
+  }
+
+  saveSession() {
+    return this.getLocalStorage()
+      .then((session:IStorage) => {
+        return this.encrypt(this.session)
+          .then((data:any) => session.set('session', data));
+      });
+  }
+
+  getSession():Promise<SafeSession> {
+    return Promise.resolve().then(() => {
+      if (this.session) {
+        return this.session;
+      }
+
+      return Promise.resolve()
+        .then(() => this.getLocalStorage())
+        .then((storage:IStorage) => storage.get('session'))
+        .then((sessionInfo:any) => {
+          if (sessionInfo) {
+            return this.decrypt(sessionInfo)
+              .then((data:any) => {
+                this.session = new SafeSession();
+                return this.session.deserialize(data);
+              });
+          } else {
+            this.session = new SafeSession();
+            return this.session;
+          }
+        });
+    });
   }
 }

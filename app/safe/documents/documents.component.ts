@@ -15,20 +15,23 @@ import {DocumentService} from "../../services/document/document.service";
   <router-outlet></router-outlet>
   
   <h4>Documents</h4>
-  <ul>
-    <li></li>
+  <ul *ngFor="let document of documents">
+    <li>{{document.name}} {{document.id}}</li>
   </ul>
 `,
 })
 export class SafeDocumentsComponent implements OnInit{
-  private documents:SafeDocument[] = [];
-  
+  documents:SafeDocument[] = [];
+
   constructor(private router:Router, private documentService:DocumentService) {
   }
 
   ngOnInit():void {
     this.documentService.load()
       .then(() => this.documentService.getDocuments())
-      .then((documents:SafeDocument[]) => this.documents = documents);
+      .then((documents:SafeDocument[]) => this.documents = documents)
+      .then(() => {
+        console.log(this.documents);
+      });
   }
 }
