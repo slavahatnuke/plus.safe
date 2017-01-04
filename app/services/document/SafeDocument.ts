@@ -4,6 +4,7 @@ export class SafeDocument {
 
   public name:string = '';
   public storageType:string = 'drive';
+  public storageId:string;
 
   public type:string = 'text';
   public content:any;
@@ -20,6 +21,7 @@ export class SafeDocument {
         this.name = data.name;
         this.storageType = data.storageType;
         this.type = data.type;
+        this.storageId = data.storageId;
       })
       .then(() => this);
   }

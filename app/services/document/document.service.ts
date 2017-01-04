@@ -12,69 +12,71 @@ import {SafeSessionDocument} from "../user/session/SafeSessionDocument";
 @Injectable()
 export class DocumentService {
 
-  private storage:IStorage;
+  private storage: IStorage;
 
-  constructor(private userService:UserService,
-              private storageContainer:StorageContainer,
-              private cryptoService:CryptoService,
-              private certificateService:CertificateService) {
+  constructor(private userService: UserService,
+              private storageContainer: StorageContainer,
+              private cryptoService: CryptoService,
+              private certificateService: CertificateService) {
 
   }
 
-  load():Promise<DocumentService> {
+  load(): Promise<DocumentService> {
     return Promise.resolve()
       .then(() => {
         return this.storageContainer.get('drive')
-          .then((storage:any) => storage.auth())
-          .then((storage:IStorage) => this.storage = storage)
+          .then((storage: any) => storage.auth())
+          .then((storage: IStorage) => this.storage = storage)
           .then(() => this);
       });
   }
 
-  getDocuments():Promise<SafeDocument[]> {
+  getDocuments(): Promise<SafeDocument[]> {
     return this.userService.getSession()
-      .then((session:SafeSession) => {
-        console.log('session.documents', session.documents);
-        console.log('session', session);
-
-        return Promise.all(session.documents.map((doc:SafeSessionDocument) => {
+      .then((session: SafeSession) => {
+        return Promise.all(session.documents.map((doc: SafeSessionDocument) => {
           return new SafeDocument().deserialize(doc);
         }));
       });
   }
 
-
-  addDocument(document:SafeDocument) {
-    console.log('addDocument', document);
-
-    return this.userService.getSession()
-      .then((session:SafeSession) => session.addDocument(document))
-      .then(() => this.userService.saveSession());
-  }
-
-  save(document:SafeDocument) {
-    console.log('save', document);
-
+  save(document: SafeDocument) {
     return this.certificateService.getCertificateById(document.certificateId)
-      .then((certificate:SafeCertificate) => {
+      .then((certificate: SafeCertificate) => {
         return Promise.resolve()
           .then(() => {
             if (!document.id) {
               return Promise.resolve()
                 .then(() => this.cryptoService.generateId())
                 .then((id) => document.id = id)
-                .then(() => document.content = document.content || '')
-                .then(() => document);
+                .then(() => document.content = document.content || '');
             }
-
-            return document;
           })
-          .then((document:SafeDocument) => this.addDocument(document))
+          .then(() => this.addDocument(document))
           .then(() => this.cryptoService.encrypt(document, certificate.key))
-          .then((data:string) => {
-            console.log('doc data', document);
-            console.log('save data', data);
-          });
+          .then((data: string) => {
+            return this.load().then(() => {
+              let promise: Promise<any>;
+
+              if (document.storageId) {
+                promise = this.storage.create(document.name, data)
+                  .then((storageId: string) => document.storageId = storageId);
+              } else {
+                promise = this.storage.set(document.storageId, data)
+              }
+
+              return promise;
+            });
+          })
+          .then(() => this.addDocument(document))
+          .then(() => document);
       })
   }
+
+  private addDocument(document: SafeDocument) {
+    return this.userService.getSession()
+      .then((session: SafeSession) => session.addDocument(document))
+      .then(() => this.userService.saveSession());
+  }
+
 }
