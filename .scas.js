@@ -1,9 +1,7 @@
 module.exports = {
-    title: '$ scas [actions] <arguments> <options>', // you can rewrite this for you goals
-    description: 'Scaffolding console', // you can rewrite this for you goals
-    // import other scas files or packages.
+    title: '$ scas [actions] <arguments>',
+    description: 'Scaffolding',
     imports: [
-        // it needs to support default help
         { path: 'scas/angular' }
     ],
     actions: {},

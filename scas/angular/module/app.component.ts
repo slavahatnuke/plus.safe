@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import { {{{name | Camel}}}Service } from "./{{{ name | kebab }}}.service";
 
 @Component({
   selector: '{{{name | kebab}}}',
@@ -7,4 +8,5 @@ import {Component} from '@angular/core';
 })
 export class {{{name | Camel}}}Component {
   title = 'works!';
+  constructor(private {{{ name | camel }}}Service: {{{ name | Camel }}}Service) {}
 }
