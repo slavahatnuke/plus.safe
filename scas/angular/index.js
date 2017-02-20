@@ -23,6 +23,12 @@ module.exports = {
           map: {
             dir: '{{{ dir }}}/{{{ name | kebab }}}'
           }
+        },
+        {
+          name: 'class',
+          map: {
+            dir: '{{{ dir }}}/{{{ name | kebab }}}'
+          }
         }
       ]
     },
@@ -38,6 +44,11 @@ module.exports = {
       arguments: ['dir', 'name'],
       input: 'module/app.service.ts',
       out: '{{{ dir }}}/{{{ name | kebab }}}.service.ts'
+    },
+    'class': {
+      arguments: ['dir', 'name'],
+      input: 'module/app.class.ts',
+      out: '{{{ dir }}}/{{{ name | kebab }}}.ts'
     },
     '.component.html': {
       arguments: ['dir', 'name'],
