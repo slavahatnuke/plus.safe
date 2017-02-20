@@ -2,13 +2,19 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Plus.Safe</title>
+  <title>+safe</title>
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <script src="assets/lib/openpgp/dist/openpgp.js"></script>
+  <script>
+    openpgp.initWorker({path: 'assets/lib/openpgp/dist/openpgp.worker.js'})
+  </script>
+
 </head>
 <body>
-  <app-root>Loading...</app-root>
+  <plus-safe>Loading...</plus-safe>
 </body>
 </html>

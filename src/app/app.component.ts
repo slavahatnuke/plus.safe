@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+
+declare var openpgp:any;
 
 @Component({
-  selector: 'app-root',
+  selector: 'plus-safe',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+  title = 'plus.safe works!';
 }
