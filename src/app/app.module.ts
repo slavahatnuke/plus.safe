@@ -7,6 +7,8 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from "./app.routing.module";
 import {RouterModule} from "@angular/router";
 import {UserModule} from "./user/user.module";
+import {OpenPgpModule} from "./open-pgp/open-pgp.module";
+import {Crypt} from "./crypt/crypt";
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import {UserModule} from "./user/user.module";
     HttpModule,
     RouterModule.forRoot([]),
     AppRoutingModule,
-    UserModule
+    UserModule,
+    Crypt
   ],
   providers: [],
   bootstrap: [AppComponent]
