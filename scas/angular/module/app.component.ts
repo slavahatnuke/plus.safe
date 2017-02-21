@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { {{{name | Camel}}}Service } from "./{{{ name | kebab }}}.service";
+// import { {{{name | Camel}}}Service } from "./{{{ name | kebab }}}.service";
 
 @Component({
   selector: '{{{name | kebab}}}',
@@ -7,6 +7,6 @@ import { {{{name | Camel}}}Service } from "./{{{ name | kebab }}}.service";
   styleUrls: ['./{{{name | kebab}}}.component.css']
 })
 export class {{{name | Camel}}}Component {
-  title = 'works!';
-  constructor(private {{{ name | camel }}}Service: {{{ name | Camel }}}Service) {}
+  title = '{{{name | Camel}}} works!';
+  // constructor(private {{{ name | camel }}}Service: {{{ name | Camel }}}Service) {}
 }
