@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 
-declare var openpgp:any;
+declare let openpgp:any;
 
 @Component({
   selector: 'plus-safe',

@@ -1,6 +1,6 @@
 module.exports = {
   title: 'angular generators',
-  description: 'angular Scaffolding console',
+  description: 'angular scaffolding console',
   imports: [],
   actions: {
     module: {
@@ -33,6 +33,30 @@ module.exports = {
         },
         {
           name: 'routing.module',
+          map: {
+            dir: '{{{ dir }}}/{{{ name | kebab }}}'
+          }
+        }
+      ]
+    },
+    'service.module': {
+      title: 'Module + service + model',
+      arguments: ['dir', 'name'],
+      batch: [
+        {
+          name: '.service.module',
+          map: {
+            dir: '{{{ dir }}}/{{{ name | kebab }}}'
+          }
+        },
+        {
+          name: 'service',
+          map: {
+            dir: '{{{ dir }}}/{{{ name | kebab }}}'
+          }
+        },
+        {
+          name: 'class',
           map: {
             dir: '{{{ dir }}}/{{{ name | kebab }}}'
           }
@@ -84,6 +108,11 @@ module.exports = {
     '.module': {
       arguments: ['dir', 'name'],
       input: 'module/app.module.ts',
+      out: '{{{ dir }}}/{{{ name | kebab }}}.module.ts'
+    },
+    '.service.module': {
+      arguments: ['dir', 'name'],
+      input: 'service-module/app.module.ts',
       out: '{{{ dir }}}/{{{ name | kebab }}}.module.ts'
     }
   }
