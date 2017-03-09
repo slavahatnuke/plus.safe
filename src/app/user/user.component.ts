@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 // import { UserService } from "./user.service";
+// import { User } from "./user";
+// import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'user',
@@ -8,5 +10,12 @@ import {Component} from '@angular/core';
 })
 export class UserComponent {
   title = 'User works!';
-  // constructor(private userService: UserService) {}
+  // constructor(private userService: UserService, private route: ActivatedRoute) {}
+
+  // ngOnInit(): void {
+  //   this.route.data
+  //   .map((data: { user: User }) => data.user)
+  //   .subscribe((user: User) => console.log(user));
+  // }
+
 }

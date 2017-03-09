@@ -7,9 +7,7 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from "./app.routing.module";
 import {RouterModule} from "@angular/router";
 import {UserModule} from "./user/user.module";
-import {OpenPgpModule} from "./open-pgp/open-pgp.module";
-import {Crypt} from "./crypt/crypt";
-import {CryptModule} from "./crypt/crypt.module";
+import {AuthModule} from "./auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -22,7 +20,7 @@ import {CryptModule} from "./crypt/crypt.module";
     RouterModule.forRoot([]),
     AppRoutingModule,
     UserModule,
-    CryptModule
+    AuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]

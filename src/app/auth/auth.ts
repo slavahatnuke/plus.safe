@@ -1,3 +1,3 @@
-export class Crypt {
+export class Auth {
   constructor() {}
 }

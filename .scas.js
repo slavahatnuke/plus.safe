@@ -4,7 +4,5 @@ module.exports = {
     imports: [
         // { path: 'scas/.scas' },
         { path: 'scas/angular' }
-    ],
-    actions: {},
-    pipes: {}
+    ]
 }

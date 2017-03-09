@@ -36,6 +36,18 @@ module.exports = {
           map: {
             dir: '{{{ dir }}}/{{{ name | kebab }}}'
           }
+        },
+        {
+          name: 'routing.can.activate',
+          map: {
+            dir: '{{{ dir }}}/{{{ name | kebab }}}'
+          }
+        },
+        {
+          name: 'resolver',
+          map: {
+            dir: '{{{ dir }}}/{{{ name | kebab }}}'
+          }
         }
       ]
     },
@@ -89,6 +101,18 @@ module.exports = {
       arguments: ['dir', 'name'],
       input: 'module/app.routing.module.ts',
       out: '{{{ dir }}}/{{{ name | kebab }}}.routing.module.ts'
+    },
+    'routing.can.activate': {
+      title: 'Simple can activate guard',
+      arguments: ['dir', 'name'],
+      input: 'module/app.canActivate.ts',
+      out: '{{{ dir }}}/{{{ name | kebab }}}.canActivate.ts'
+    },
+    'resolver': {
+      title: 'Simple resolver',
+      arguments: ['dir', 'name'],
+      input: 'module/app.resolver.ts',
+      out: '{{{ dir }}}/{{{ name | kebab }}}.resolver.ts'
     },
     '.component.html': {
       arguments: ['dir', 'name'],

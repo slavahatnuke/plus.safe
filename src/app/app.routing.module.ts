@@ -15,11 +15,8 @@ const routes: Routes = [
       // }
     ]
   },
-  { path: '',
-    redirectTo: 'user',
-    pathMatch: 'full'
-  },
-  { path: '**', redirectTo: 'user'}
+  { path: '', redirectTo: 'auth/sign-in', pathMatch: 'full'},
+  { path: '**', redirectTo: 'signin'}
 ];
 
 @NgModule({
