@@ -94,7 +94,7 @@ module.exports = {
       title: 'Simple class/model',
       arguments: ['dir', 'name'],
       input: 'module/app.class.ts',
-      out: '{{{ dir }}}/{{{ name | kebab }}}.ts'
+      out: '{{{ dir }}}/{{{ name | Camel }}}.ts'
     },
     'routing.module': {
       title: 'Simple routing module',
@@ -138,6 +138,19 @@ module.exports = {
       arguments: ['dir', 'name'],
       input: 'service-module/app.module.ts',
       out: '{{{ dir }}}/{{{ name | kebab }}}.module.ts'
-    }
+    },
+    'rest.resource': {
+      title: 'RESTFul Resource',
+      arguments: ['dir', 'name'],
+      input: 'rest/model.resource.ts',
+      out: '{{{ dir }}}/{{{ name | kebab }}}.resource.ts'
+    },
+    'rest.service': {
+      title: 'RESTFul Service',
+      arguments: ['dir', 'name'],
+      input: 'rest/model.service.ts',
+      out: '{{{ dir }}}/{{{ name | kebab }}}.service.ts'
+    },
+
   }
 }
